@@ -1,6 +1,14 @@
+<?php include('server.inc.php') ?>
+
+<?php
+
+$_SESSION['email'] = $email;
+$_SESSION['loggedIn'] = true;
+?>
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
       <div class="container">
-        <a class="navbar-brand" href="#"><img src="img/logo.png" alt="" /></a>
+        <a class="navbar-brand" href="index.php"><img src="img/logo.png" alt="" /></a>
         <button
           class="navbar-toggler"
           type="button"
@@ -30,6 +38,14 @@
             <li class="nav-item">
               <a class="nav-link" href="about.php">About</a>
             </li>
+            <?php if($_SESSION['loggedIn']): ?>
+                <span>Welcome <?php echo $_SESSION['email']; ?></span>
+            <?php endif; ?>
+            <?php if($_SESSION['loggedIn']): ?>
+            <button onclick = "$_SESSION['loggedIn'] = false;" >Log Out</button>
+            <?php else: ?>
+            <button>Log In</button>
+            <?php endif; ?>
           </ul>
         </div>
       </div>
