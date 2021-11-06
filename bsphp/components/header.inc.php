@@ -2,6 +2,10 @@
       <div class="container pt-3">
         <div class="row align-items-center justify-content-center">
           <div class="col-md-5">
+
+            <? //Display if user is not logged in ?>
+            <?php if(!isset($_SESSION['loggedIn'])): ?>
+
             <h2>Get the best price for the services you need</h2>
 
             <p>
@@ -16,14 +20,17 @@
                 class="btn btn-outline-success btn-lg">
               Sign-Up
             </button>
+
             <p>
                 Already a member? Just sign-in!
             </p>
+
             <button onclick="window.location.href='signin.php'"
                 type="button" 
                 class="btn btn-outline-warning btn-lg">
               Sign-In
             </button>
+
           </div>
           <div class="col-md-5">
             <img
@@ -31,8 +38,50 @@
               alt="Header image"
             />
           </div>
+
+          <?php endif; ?>
+
+          <?php if(isset($_SESSION['loggedIn'])): ?>
+          <? //Display if user is logged in ?>
+
+          <h2>Welcome <?php echo $_SESSION['email']; ?> </h2>
+
+          <p>
+            To get started, click on the "Services" button to tell
+            us what you're looking for!
+          </p>
+
+          <button onclick="window.location.href='services.php'"
+              type="button" 
+              class="btn btn-outline-info btn-lg">
+            Services
+          </button>
+
+          <p>
+              Link to check existing orders / account
+              Not yet working
+          </p>
+
+          <button onclick="window.location.href='signin.php'"
+              type="button" 
+              class="btn btn-outline-warning btn-lg">
+            Account
+          </button>
+          
+        </div>
+          <div class="col-md-5">
+          
+          <img
+            src="img/email_campaign_monochromatic.svg"
+            alt="Header image"
+          />
+          </div>
+          </div>
+          </div>
         </div>
       </div>
+      <?php endif; ?>
+
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 250">
         <path
           fill="#fff"

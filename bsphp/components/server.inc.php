@@ -47,13 +47,14 @@ if (isset($_POST['reg_user'])) {
 
   // Finally, register user if there are no errors in the form
   if (count($errors) == 0) {
-  	$password = md5($password_1);//encrypt the password before saving in the database
+  	$password = $password_1;//encrypt the password before saving in the database
 
   	$query = "INSERT INTO homeowners (Name, Email, Password, Phone, CreditCard, BankAccount) 
   			  VALUES('$username', '$email', '$password', '$phonenumber', '$creditcard', '$bankaccount')";
   	mysqli_query($db, $query);
   	$_SESSION['email'] = $email;
   	$_SESSION['success'] = "You are now logged in";
+    $_SESSION['loggedIn'] = TRUE;
   	header('location: index.php');
   }
 }
@@ -71,12 +72,13 @@ if (isset($_POST['login_user'])) {
     }
   
     if (count($errors) == 0) {
-        $password = md5($password);
-        $query = "SELECT * FROM users WHERE email='$email' AND password='$password'";
+        $password = $password;
+        $query = "SELECT * FROM homeowners WHERE email='$email' AND password='$password'";
         $results = mysqli_query($db, $query);
-        if (mysqli_num_rows($results) == 1) {
+        if (mysqli_num_rows($results)) {
           $_SESSION['email'] = $email;
           $_SESSION['success'] = "You are now logged in";
+          $_SESSION['loggedIn'] = TRUE;
           header('location: index.php');
         }else {
             array_push($errors, "Wrong username/password combination");

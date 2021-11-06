@@ -2,8 +2,8 @@
 
 <?php
 
-$_SESSION['email'] = $email;
-$_SESSION['loggedIn'] = true;
+session_start();
+
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
@@ -38,14 +38,24 @@ $_SESSION['loggedIn'] = true;
             <li class="nav-item">
               <a class="nav-link" href="about.php">About</a>
             </li>
-            <?php if($_SESSION['loggedIn']): ?>
-                <span>Welcome <?php echo $_SESSION['email']; ?></span>
+            <li clas = "nav-item"> 
+              <a clas = "nav-link" >
+            <?php if(isset($_SESSION['loggedIn'])): ?>
+                Welcome <?php echo $_SESSION['email']; ?>
             <?php endif; ?>
-            <?php if($_SESSION['loggedIn']): ?>
-            <button onclick = "$_SESSION['loggedIn'] = false;" >Log Out</button>
+            <?php if(isset($_SESSION['loggedIn'])): ?>
+             <button onclick="window.location.href='logout.php'"
+                type="button" 
+                class="btn btn-outline-warning btn-sm"> Logout
+            </button>
             <?php else: ?>
-            <button>Log In</button>
+            <button onclick="window.location.href='signin.php'"
+                type="button"
+                class="btn btn-outline-success btn-sm"> Sign In
+              </button>
             <?php endif; ?>
+            </a>
+            </li>
           </ul>
         </div>
       </div>

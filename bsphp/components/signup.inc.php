@@ -1,5 +1,3 @@
-<?php include('server.inc.php') ?>
-
 <header class="page-header gradient">
       <div class="container pt-3">
         <div class="row align-items-center justify-content-center">
@@ -7,7 +5,7 @@
              <form method="post" action="signup.php">
             	<?php include('errors.inc.php'); ?>
   	                <div class="input-group">
-  	                    <label>Name</label>
+  	                    <label>Name:</label> <br>
   	                    <input 
                             type="text" 
                             name="username" 
@@ -56,12 +54,17 @@
                           type="number" 
                           name="bankaccount"
                         >
-  	                </div>
-  	                <div class="input-group">
-  	                 <button type="submit" class="btn" name="reg_user">Signup</button>
+                    <div class="input-group">
+  	                 <button type="submit" 
+					   		             class="btn btn-outline-success" 
+							               name="reg_user">Sign Up</button>
   	                </div>
   	                <p>
-  		                Already a member? <a href="signin.php">Sign in</a>
+  		                Already a member? 
+						          <button onclick="window.location.href='signin.php'"
+						                  type="button" 
+						                  class = "btn btn-outline-warning">
+						          Sign In</button>
   	                </p>
              </form>
           </div>
