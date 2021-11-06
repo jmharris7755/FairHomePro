@@ -1,3 +1,4 @@
+<header class="page-header gradient">
 <section class="contact">
       <div class="container">
         <div class="row">
@@ -34,3 +35,4 @@
         </div>
       </div>
     </section>
+</header>
