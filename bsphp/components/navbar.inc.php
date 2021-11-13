@@ -1,10 +1,7 @@
+<?php //This section is for the Navigation bar at the top of the page ?>
+
 <?php include('server.inc.php') ?>
 
-<?php
-
-session_start();
-
-?>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
       <div class="container">

@@ -29,8 +29,8 @@ if (isset($_POST['reg_user'])) {
 	array_push($errors, "The two passwords do not match");
   }
   if (empty($phonenumber)) { array_push($errors, "Phone Number is required"); }
-  if (empty($creditcard)) { array_push($errors, "Credit Card is required"); }
-  if (empty($bankaccount)) { array_push($errors, "Bank Account is required"); }
+  //if (empty($creditcard)) { array_push($errors, "Credit Card is required"); }
+  //if (empty($bankaccount)) { array_push($errors, "Bank Account is required"); }
 
   // first check the database to make sure 
   // a user does not already exist with the same username and/or email
@@ -49,7 +49,7 @@ if (isset($_POST['reg_user'])) {
   if (count($errors) == 0) {
   	$password = $password_1;//encrypt the password before saving in the database
 
-  	$query = "INSERT INTO homeowners (Name, Email, Password, Phone, CreditCard, BankAccount) 
+  	$query = "INSERT INTO homeowners (name, email, password, phone, creditcard, bankaccount) 
   			  VALUES('$username', '$email', '$password', '$phonenumber', '$creditcard', '$bankaccount')";
   	mysqli_query($db, $query);
   	$_SESSION['email'] = $email;
