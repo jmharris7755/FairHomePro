@@ -37,7 +37,7 @@
             </li>
             <li clas = "nav-item"> 
               <a clas = "nav-link" >
-            <?php if(isset($_SESSION['loggedIn'])): ?>
+            <?php if(isset($_SESSION['loggedIn']) AND isset($_SESSION['email'])): ?>
                 Welcome <?php echo $_SESSION['email']; ?>
             <?php endif; ?>
             <?php if(isset($_SESSION['loggedIn'])): ?>

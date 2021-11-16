@@ -62,7 +62,7 @@
 
           <?php endif; ?>
 
-          <?php if(isset($_SESSION['loggedIn'])): ?>
+          <?php if(isset($_SESSION['loggedIn']) AND isset($_SESSION['email'])): ?>
           <? //Display if user is logged in ?>
 
           <h2>Welcome <?php echo $_SESSION['email']; ?> </h2>
@@ -88,7 +88,16 @@
               class="btn btn-outline-warning btn-lg">
             Account
           </button>
-          
+
+        <?php elseif(isset($_SESSION['sp_email']) AND isset($_SESSION['sp_username'])): ?>
+        <h2>Welcome <?php echo $_SESSION['sp_username']; ?> </h2>
+          <button onclick="window.location.href='business_services.php'"
+              type="button" 
+              class="btn btn-outline-info btn-lg">
+            Services
+          </button>
+
+       <?php endif; ?>         
         </div>
           <div class="col-md-5">
           
@@ -101,7 +110,7 @@
           </div>
         </div>
       </div>
-      <?php endif; ?>
+
 
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 250">
         <path

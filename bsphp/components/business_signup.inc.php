@@ -13,11 +13,10 @@
                           echo str_repeat("&nbsp;", 10);
                           ?>
                           <br>
-
   	                    <input 
                             type="text" 
-                            name="username" 
-                            value="<?php echo $username; ?>"
+                            name="sp_username" 
+                            value="<?php echo $sp_username; ?>"
                         >
   	                </div>
                 	<div class="input-group">
@@ -27,9 +26,9 @@
                           echo str_repeat("&hairsp;", 2);
                           ?>
   	                     <input 
-                           type="email" 
-                           name="email" 
-                           value="<?php echo $email; ?>"
+                           type="text" 
+                           name="sp_email" 
+                           value="<?php echo $sp_email; ?>"
                         >
   	                </div>
                 	<div class="input-group">
@@ -40,7 +39,7 @@
                           ?>
   	                    <input 
                           type="password" 
-                          name="password_1"
+                          name="sp_password_1"
                         >
   	                </div>
                 	<div class="input-group">
@@ -51,7 +50,7 @@
                           ?>
   	                    <input 
                           type="password" 
-                          name="password_2"
+                          name="sp_password_2"
                         >
   	                </div>
                     <div class="input-group">
@@ -62,7 +61,7 @@
                           ?>
   	                    <input 
                           type="number" 
-                          name="phonenumber"
+                          name="sp_phonenumber"
                         >
   	                </div>
                     <div class="input-group">
@@ -73,7 +72,7 @@
                           ?>
   	                    <input 
                           type="number" 
-                          name="creditcard"
+                          name="sp_creditcard"
                         >
   	                </div>
                     <div class="input-group">
@@ -84,12 +83,12 @@
                           ?>
   	                    <input 
                           type="number" 
-                          name="bankaccount"
+                          name="sp_bankaccount"
                         >
                     <div class="input-group">
   	                 <button type="submit" 
 					   		             class="btn btn-outline-success" 
-							               name="reg_user">Sign Up</button>
+							               name="reg_business">Sign Up</button>
   	                </div>
   	                <p>
   		                Already a member? 

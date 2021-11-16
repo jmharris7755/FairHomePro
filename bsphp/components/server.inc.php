@@ -3,11 +3,45 @@ session_start();
 
 // initializing variables
 $username = "";
+$sp_username = "";
+$sp_email = "";
 $email    = "";
 $errors = array(); 
 
 // connect to the database
 $db = mysqli_connect('localhost', 'root', '', 'fairhomepro');
+
+// REGISTER BUSINESS
+if(isset($_POST['reg_business' ])) {
+
+  $sp_username = mysqli_real_escape_string($db, $_POST['sp_username']);
+  $sp_email = mysqli_real_escape_string($db, $_POST['sp_email']);
+  $sp_password_1 = mysqli_real_escape_string($db, $_POST['sp_password_1']);
+  $sp_password_2 = mysqli_real_escape_string($db, $_POST['sp_password_2']);
+  $sp_phonenumber = mysqli_real_escape_string($db, $_POST['sp_phonenumber']);
+  $sp_creditcard = mysqli_real_escape_string($db, $_POST['sp_creditcard']);
+  $sp_bankaccount = mysqli_real_escape_string($db, $_POST['sp_bankaccount']);
+
+  if (empty($sp_username)) {array_push($errors, "Business name is required");}
+  if (empty($sp_email)) { array_push($errors, "Email is required"); }
+  if (empty($sp_password_1)) { array_push($errors, "Password is required"); }
+  if ($sp_password_1 != $sp_password_2) {
+	array_push($errors, "The two passwords do not match");
+}
+
+  if (count($errors) == 0) {
+  	$password = $password_1;//encrypt the password before saving in the database
+
+  	$query = "INSERT INTO service_providers (business_name, sp_email, sp_password, sp_phone, sp_creditcard, sp_bankaccount) 
+  			  VALUES('$sp_username', '$sp_email', '$sp_password', '$sp_phonenumber', '$sp_creditcard', '$sp_bankaccount')";
+  	mysqli_query($db, $query);
+    $_SESSION['sp_username'] = $sp_username;
+  	$_SESSION['sp_email'] = $sp_email;
+  	$_SESSION['success'] = "You are now logged in";
+    $_SESSION['loggedIn'] = TRUE;
+  	header('location: index.php');
+  }
+}
 
 // REGISTER USER
 if (isset($_POST['reg_user'])) {
