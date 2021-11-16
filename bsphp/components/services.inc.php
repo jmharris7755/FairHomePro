@@ -10,10 +10,10 @@
         <div class="row align-items-center justify-content-center">
           <div class="col-md-5">
             <button type="button" class="btn btn-outline-warning mb-3">
-              Coding
+              Home Info.
             </button>
 
-            <h1>We code.</h1>
+            <h1>This page is under construction</h1>
 
             <p>
               Lorem ipsum dolor sit amet, consectetur adipisicing elit.
@@ -25,10 +25,10 @@
           <div class="col-md-5"><img src="img/marketing.svg" alt="" /></div>
           <div class="col-md-5">
             <button type="button " class="btn btn-outline-success mb-3">
-              Marketing
+              Select Services
             </button>
 
-            <h1>We promote.</h1>
+            <h1>This page is under construction.</h1>
 
             <p>
               Lorem ipsum dolor sit amet, consectetur adipisicing elit.
@@ -38,10 +38,10 @@
           </div>
           <div class="col-md-5">
             <button type="button" class="btn btn-outline-light mb-3">
-              Selling
+              Complaint?
             </button>
 
-            <h1>We sell.</h1>
+            <h1>This page is under construction</h1>
 
             <p>
               Lorem ipsum dolor sit amet, consectetur adipisicing elit.
