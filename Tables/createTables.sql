@@ -2,10 +2,10 @@
 # Create homeowners table
 CREATE TABLE IF NOT EXISTS homeowners(
     HOID BIGINT UNSIGNED UNIQUE NOT NULL AUTO_INCREMENT,
-    first_name VARCHAR(45) NOT NULL,
-    last_name VARCHAR(45) NOT NULL,
+    name VARCHAR(45) NOT NULL,
     email VARCHAR(100) PRIMARY KEY UNIQUE NOT NULL,
     password VARCHAR(16) NOT NULL,
+    phone INT NOT NULL,
     creditcard BIGINT UNSIGNED,
     bankaccount BIGINT UNSIGNED
 );

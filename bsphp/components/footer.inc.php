@@ -1,7 +1,7 @@
 <footer class="gradient">
       <div class="container-fluid text-center">
         <span
-          >Made by Justin Harris</a></span
+          >Made by Justin Harris and Jeremy Wisecarver</a></span
         >
       </div>
     </footer>
