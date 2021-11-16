@@ -15,7 +15,28 @@
               Satisfaction gauranteed!
             </p>
 
+
             <button onclick="window.location.href='signup.php'"
+                type="button" 
+                class="btn btn-outline-success btn-lg">
+              Sign-Up
+            </button>
+
+            <p>
+
+            </p>
+
+
+            <?php
+            echo nl2br("\n");
+             ?>
+
+
+            <p> 
+            Are you a business owner? Sign up here!
+            </p>
+
+            <button onclick="window.location.href='business_signup.php'"
                 type="button" 
                 class="btn btn-outline-success btn-lg">
               Sign-Up
