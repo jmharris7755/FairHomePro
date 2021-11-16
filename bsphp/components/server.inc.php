@@ -87,6 +87,7 @@ if (isset($_POST['reg_user'])) {
   			  VALUES('$username', '$email', '$password', '$phonenumber', '$creditcard', '$bankaccount')";
   	mysqli_query($db, $query);
   	$_SESSION['email'] = $email;
+    $_SESSION['c_name'] = $username;
   	$_SESSION['success'] = "You are now logged in";
     $_SESSION['loggedIn'] = TRUE;
   	header('location: index.php');
@@ -107,8 +108,9 @@ if (isset($_POST['login_user'])) {
   
     if (count($errors) == 0) {
         $password = $password;
-        $query = "SELECT * FROM homeowners WHERE email='$email' AND password='$password'";
+        $query = "SELECT name FROM homeowners WHERE email='$email' AND password='$password'";
         $results = mysqli_query($db, $query);
+
         if (mysqli_num_rows($results)) {
           $_SESSION['email'] = $email;
           $_SESSION['success'] = "You are now logged in";

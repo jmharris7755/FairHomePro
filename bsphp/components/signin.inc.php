@@ -7,6 +7,10 @@
             	<?php include('errors.inc.php'); ?>
                 	<div class="input-group">
   	                     <label>Email</label>
+						   <?php
+                          echo str_repeat("&nbsp;", 29); 
+                          echo str_repeat("&hairsp;", 2);
+                          ?>
   	                     <input 
                            type="email" 
                            name="email" 
@@ -15,6 +19,10 @@
   	                </div>
                 	<div class="input-group">
   	                     <label>Password</label>
+						   <?php
+                          echo str_repeat("&nbsp;", 22); 
+                          echo str_repeat("&hairsp;", 1);
+                          ?>
   	                    <input 
                           type="password" 
                           name="password"
