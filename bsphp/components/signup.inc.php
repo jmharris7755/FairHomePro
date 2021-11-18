@@ -14,7 +14,7 @@
                           <br>
   	                    <input 
                             type="text" 
-                            name="username" 
+                            name="ho_username" 
                             value="<?php echo $username; ?>"
                         >
   	                </div>
@@ -26,7 +26,7 @@
                           ?>
   	                     <input 
                            type="email" 
-                           name="email" 
+                           name="ho_email" 
                            value="<?php echo $email; ?>"
                         >
   	                </div>
@@ -60,7 +60,7 @@
                           ?>
   	                    <input 
                           type="number" 
-                          name="phonenumber"
+                          name="ho_phonenumber"
                         >
   	                </div>
                     <div class="input-group">
@@ -71,7 +71,7 @@
                           ?>
   	                    <input 
                           type="number" 
-                          name="creditcard"
+                          name="ho_creditcard"
                         >
   	                </div>
                     <div class="input-group">
@@ -82,7 +82,7 @@
                           ?>
   	                    <input 
                           type="number" 
-                          name="bankaccount"
+                          name="ho_bankaccount"
                         >
                     <div class="input-group">
   	                 <button type="submit" 

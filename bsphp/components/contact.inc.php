@@ -1,6 +1,6 @@
 <header class="page-header gradient">
 <section class="contact">
-      <div class="container">
+      <div class="container pt-3">
         <div class="row">
           <div class="col-md-5">
             <h1>Contact us:</h1>
