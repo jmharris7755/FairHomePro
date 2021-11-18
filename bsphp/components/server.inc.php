@@ -30,10 +30,10 @@ if(isset($_POST['reg_business' ])) {
 }
 
   if (count($errors) == 0) {
-  	$password = $password_1;//encrypt the password before saving in the database
+  	$sp_password_1 = $sp_password_2;//encrypt the password before saving in the database
 
-  	$query = "INSERT INTO service_providers (business_name, sp_email, sp_password, sp_phone, sp_creditcard, sp_bankaccount) 
-  			  VALUES('$sp_username', '$sp_email', '$sp_password', '$sp_phonenumber', '$sp_creditcard', '$sp_bankaccount')";
+  	$query = "INSERT INTO service_pros (b_name, email, password, creditcard, bankaccount, services, SPID) 
+  			  VALUES('$sp_username', '$sp_email', '$sp_password_1', '$sp_creditcard', '$sp_bankaccount', '$sp_password_2', '1')";
   	mysqli_query($db, $query);
     $_SESSION['sp_username'] = $sp_username;
   	$_SESSION['sp_email'] = $sp_email;
