@@ -8,7 +8,7 @@
       </svg>
       <div class="container">
         <div class="row align-items-center justify-content-left">
-          <div class="col-md-5"><img src="img/logo_solitary.png" alt="" />
+          <div class="col-md-5" style=  "position:absolute; left:50px; top:250px;"><img src="img/logo_solitary.png" alt="" />
 
             <h1>Welcome to FairHomePro</h1>
 
@@ -20,8 +20,7 @@
           <div class = "container pt-3">
             <div class="row align-items-center justify-content-center">
                 <div class="col-md-5">
-                <h2>My Home</h2>
-                    <h3> Address: </h3>
+                <h2>My Home:</h2>
                     <form method="post" action="add_home.php">
             	    <?php include('errors.inc.php'); ?>
                     <div style="input-group">
