@@ -1,12 +1,12 @@
 <header class="page-header gradient">
     <div class="container pt-3">
         <div class="row align-items-center justify-content-center">
-            <div class="col-md-5">
-                <h2> My Account </h2>
+            <div class="col-md-3">
+                <h2> <strong><u>My Account</u></strong> </h2>
             </div>
             <p></p>
-            <div style="width: 500px; float:left; margin:20px">
-                <h3> My Information </h3>
+            <div style=" width: auto; float:left; margin:auto">
+                <h3> <strong><u>My Information</u></strong> </h3>
                 <?php if($_SESSION['c_info_edit'] === TRUE): ?>
                 <? //Display if user clicked the edit button ?>
                 <form name="acct_info_form"action="customer_account.php" method="POST">
@@ -53,7 +53,7 @@
                 <table class="table-bordered">
                     <tr> 
                         <th>Name: </th>
-                        <td><input type="text" name="ho_username" background-color="#FFFFFF" value ="<?php echo $_SESSION['ho_username']; ?>" readonly/> </td>
+                        <td><input type="text" name="ho_username" value ="<?php echo $_SESSION['ho_username']; ?>" readonly/> </td>
                     </tr>
                     <tr>
                         <th>Email: </th>
@@ -83,49 +83,27 @@
                 <?php endif; ?>  
             </div>
 
-            <div style="width: 500px; float:left; margin:20px">
-                <h3> My Homes </h3>
+            <div style=" width: 500px; float:left; margin:auto">
+                <h3> <strong><u>My Homes</u></strong> </h3>
                 <form action="customer_account.php" method="POST">
                 <table class="table-bordered">
-                    <tr> 
-                        <th>Street: </th>
-                        <td><input type="text" name="street" background-color="#FFFFFF" value ="<?php echo $_SESSION['ho_username']; ?>" readonly/> </td>
-                    </tr>
-                    <tr>
-                        <th>City: </th>
-                        <td><input type="text" name="city" value ="<?php echo $_SESSION['ho_email']; ?>" readonly/> </td>
-                    </tr>
-                    <tr>
-                        <th>State: </th>
-                        <td><input type="text" name="state" value ="<?php echo $_SESSION['ho_phone']; ?>" readonly/> </td>
-                    </tr>
-                    <tr>
-                        <th>Zip Code: </th>
-                        <td><input type="text" name="zip_code" value ="<?php echo $_SESSION['ho_creditcard']; ?>" readonly/> </td>
-                    </tr>
-                    <tr>
-                        <th>Construction Type: </th>
-                        <td><input type="text" name="constr_type" value ="<?php echo $_SESSION['ho_bankaccount']; ?>" readonly/> </td>
-                    </tr>
-                    <tr>
-                        <th>Flooring: </th>
-                        <td><input type="text" name="flooring" value ="<?php echo $_SESSION['ho_bankaccount']; ?>" readonly/> </td>
-                    </tr>
-                    <tr>
-                        <th>Home Sq. Ft.: </th>
-                        <td><input type="text" name="h_sq_ft" value ="<?php echo $_SESSION['ho_bankaccount']; ?>" readonly/> </td>
-                    </tr>
-                    <tr>
-                        <th>Yard Sq. Ft.: </th>
-                        <td><input type="text" name="y_sq_ft" value ="<?php echo $_SESSION['ho_bankaccount']; ?>" readonly/> </td>
-                    </tr>
+                    <?php
+                        account_create_homes_table();
+                     ?>
                 </table>
-                <button  onclick= "<?php $_SESSION['c_home_edit'] = TRUE ?>"
+                <button  onclick= "window.location.href='add_home.php'"
 						  type="button" 
 						  class = "btn btn-outline-success"
-                          name = "c_info_edit"
+                          name = "add_home"
                           >
-						  Edit Info
+						  Add a Home
+                </button>
+                <button  onclick= "window.location.href='add_home.php'"
+						  type="button" 
+						  class = "btn btn-outline-success"
+                          name = "add_home"
+                          >
+						  Edit Homes
                 </button>
                 </form> 
             </div>

@@ -214,6 +214,7 @@ if (isset($_POST['customer_account'])) {
   $account_query = "SELECT * FROM homeowners WHERE HO_email='$ho_email'";
   $account_results = mysqli_query($db, $account_query);
 
+
   if (mysqli_num_rows($account_results)) {
     while($c_row = mysqli_fetch_array($account_results)){
         $_SESSION['ho_username'] = $c_row['HO_name'];
@@ -226,50 +227,91 @@ if (isset($_POST['customer_account'])) {
   else {
       array_push($errors, "Error going to account page");
   }
+  
 }
 
-  //Query to update customer account info
-  if (isset($_POST['update_c_info'])){
-    $ho_username = mysqli_real_escape_string($db, $_POST['ho_username']);
-    $ho_email = mysqli_real_escape_string($db, $_POST['ho_email']);
-    $ho_phonenumber = mysqli_real_escape_string($db, $_POST['ho_phone']);
-    $ho_creditcard = mysqli_real_escape_string($db, $_POST['ho_creditcard']);
-    $ho_bankaccount = mysqli_real_escape_string($db, $_POST['ho_bankaccount']);
-    
-    
-    if (empty($ho_username)) {
-      array_push($errors, "Name is required");
+//Get Homes information
+function account_create_homes_table(){
+  $ho_email = $_SESSION['ho_email'];
+  $db = mysqli_connect('localhost', 'root', '', 'fairhomepro');
+
+  $account_homes_query = "SELECT street, city, state, zip FROM homeowners, owns WHERE homeowners.HO_email='$ho_email'
+                          AND homeowners.HO_email = owns.HO_email";
+
+  $account_homes_results = mysqli_query($db, $account_homes_query);
+
+  if (mysqli_num_rows($account_homes_results)){
+
+    $field = $account_homes_results->fetch_fields();
+    $fields = array();
+    $j=0;
+    $home_num=1;
+
+
+    echo "<th>Home</th>";
+    foreach($field as $col){
+      echo "<th>".$col->name."</th>";
+      array_push($fields, array(++$j, $col->name));
     }
+    echo "</tr>";
 
-    if (empty($ho_phonenumber)) {
-      array_push($errors, "Phone Number is required");
-    }
-
-    if(count($errors) == 0){
-
-      $update_query = "UPDATE homeowners SET HO_name='$ho_username', 
-                      HO_phone = '$ho_phonenumber', HO_creditcard='$ho_creditcard', 
-                      HO_bankaccount='$ho_bankaccount'
-                      WHERE HO_email='$ho_email'";
-
-      $update_info_results = mysqli_query($db, $update_query);
-
-
-    }
-
-    //Get updated info from database
-    $updated_c_info_query = "SELECT * from homeowners WHERE HO_email = '$ho_email'";
-    $updated_c_info_results= mysqli_query($db, $updated_c_info_query);
-
-    if(mysqli_num_rows($updated_c_info_results)){
-      while($c_row = mysqli_fetch_array($updated_c_info_results)){
-        $_SESSION['ho_username'] = $c_row['HO_name'];
-        $_SESSION['ho_email'] = $c_row['HO_email'];
-        $_SESSION['ho_phone'] = $c_row['HO_phone'];
-        $_SESSION['ho_creditcard'] = $c_row['HO_creditcard'];
-        $_SESSION['ho_bankaccount'] = $c_row['HO_bankaccount'];
+    while($c_row = $account_homes_results->fetch_array()){
+      echo "<tr>";
+      echo "<td>$home_num</td>";
+      for($i=0 ; $i < sizeof($fields) ; $i++){
+        $fieldname = $fields[$i][1];
+        $fieldvalue = $c_row[$fieldname];
+        
+        echo "<td><input type='text' value='" . $fieldvalue . "'readonly ></td>";
       }
+      $home_num++;
+      echo "</tr>";
     }
   }
+}
+
+//Query to update customer account info
+if (isset($_POST['update_c_info'])){
+  $ho_username = mysqli_real_escape_string($db, $_POST['ho_username']);
+  $ho_email = mysqli_real_escape_string($db, $_POST['ho_email']);
+  $ho_phonenumber = mysqli_real_escape_string($db, $_POST['ho_phone']);
+  $ho_creditcard = mysqli_real_escape_string($db, $_POST['ho_creditcard']);
+  $ho_bankaccount = mysqli_real_escape_string($db, $_POST['ho_bankaccount']);
+    
+    
+  if (empty($ho_username)) {
+     array_push($errors, "Name is required");
+  }
+
+  if (empty($ho_phonenumber)) {
+     array_push($errors, "Phone Number is required");
+  }
+
+  if(count($errors) == 0){
+
+    $update_query = "UPDATE homeowners SET HO_name='$ho_username', 
+                    HO_phone = '$ho_phonenumber', HO_creditcard='$ho_creditcard', 
+                    HO_bankaccount='$ho_bankaccount'
+                    WHERE HO_email='$ho_email'";
+
+    $update_info_results = mysqli_query($db, $update_query);
+
+
+    }
+
+  //Get updated info from database
+  $updated_c_info_query = "SELECT * from homeowners WHERE HO_email = '$ho_email'";
+  $updated_c_info_results= mysqli_query($db, $updated_c_info_query);
+
+  if(mysqli_num_rows($updated_c_info_results)){
+    while($c_row = mysqli_fetch_array($updated_c_info_results)){
+      $_SESSION['ho_username'] = $c_row['HO_name'];
+      $_SESSION['ho_email'] = $c_row['HO_email'];
+      $_SESSION['ho_phone'] = $c_row['HO_phone'];
+      $_SESSION['ho_creditcard'] = $c_row['HO_creditcard'];
+      $_SESSION['ho_bankaccount'] = $c_row['HO_bankaccount'];
+    }
+  }
+}
   
   ?>
