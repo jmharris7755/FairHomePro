@@ -5,7 +5,7 @@
                 <h2> <strong><u>My Account</u></strong> </h2>
             </div>
             <p></p>
-            <div style=" width: auto; float:left; margin:auto">
+            <div class="d-flex mr-auto p-2 flex-column">
                 <h3> <strong><u>My Information</u></strong> </h3>
                 <?php if($_SESSION['c_info_edit'] === TRUE): ?>
                 <? //Display if user clicked the edit button ?>
@@ -83,25 +83,26 @@
                 <?php endif; ?>  
             </div>
 
-            <div style=" width: 500px; float:left; margin:auto">
+            <div class="d-flex mr-auto p-2 flex-column">
                 <h3> <strong><u>My Homes</u></strong> </h3>
                 <form action="customer_account.php" method="POST">
+                <div style="overflow:auto">
                 <table class="table-bordered">
                     <?php
                         account_create_homes_table();
                      ?>
                 </table>
-                <button  onclick= "window.location.href='add_home.php'"
-						  type="button" 
-						  class = "btn btn-outline-success"
-                          name = "add_home"
-                          >
-						  Add a Home
+                </div>
+                <button	id="addAHomeBtn"  
+                        type="button" 
+						class = "btn btn-outline-success"
+                        >
+						Add a Home
                 </button>
                 <button  onclick= "window.location.href='add_home.php'"
 						  type="button" 
 						  class = "btn btn-outline-success"
-                          name = "add_home"
+                          name = "edit_home"
                           >
 						  Edit Homes
                 </button>

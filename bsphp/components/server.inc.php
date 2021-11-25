@@ -313,5 +313,76 @@ if (isset($_POST['update_c_info'])){
     }
   }
 }
+
+// Add Home to Homes table from the Account page
+if (isset($_POST['add_home_modal'])) {
+  // receive all input values from the form
+  $street = mysqli_real_escape_string($db, $_POST['street']);
+  $city = mysqli_real_escape_string($db, $_POST['city']);
+  $state = mysqli_real_escape_string($db, $_POST['state']);
+  $zip_code = mysqli_real_escape_string($db, $_POST['zip_code']);
+  $const_type = mysqli_real_escape_string($db, $_POST['const_type']);
+  $floor_type = mysqli_real_escape_string($db, $_POST['floor_type']);
+  $h_sqft = mysqli_real_escape_string($db, $_POST['h_sqft']);
+  $y_sqft = mysqli_real_escape_string($db, $_POST['y_sqft']);
+  $plant_type = mysqli_real_escape_string($db, $_POST['plant_type']);
+
+  // form validation: ensure that the form is correctly filled ...
+  // by adding (array_push()) corresponding error unto $errors array
+  if (empty($street)) { array_push($errors, "Street is required"); }
+  if (empty($city)) { array_push($errors, "City is required"); }
+  if (empty($state)) { array_push($errors, "State is required"); }
+  if (empty($zip_code)) { array_push($errors, "Zip code is required"); }
+  if (empty($const_type)) { array_push($errors, "Construction Type is required"); }
+  if (empty($floor_type)) { array_push($errors, "Floor Type is required"); }
+  if (empty($h_sqft)) { array_push($errors, "Home size is required"); }
+  if (empty($y_sqft)) { array_push($errors, "Yard size is required"); }
+  //if (empty($creditcard)) { array_push($errors, "Credit Card is required"); }
+  //if (empty($bankaccount)) { array_push($errors, "Bank Account is required"); }
+
+  // first check the database to make sure 
+  // a home does not already exist with the same Address
+  $home_check_query = "SELECT * FROM homes WHERE street='$street' AND city='$city' AND state='$state' AND zip='$zip_code' LIMIT 1";
+  $home_result = mysqli_query($db, $home_check_query);
+  $home = mysqli_fetch_assoc($home_result);
+  
+  if ($home) { // if home exists
+
+    if ($home['street'] === $street && $home['city'] === $city && $home['state'] === $state && $home['zip'] === $zip_code) {
+      array_push($errors, "home already exists");
+    }
+  }
+
+  // Finally, register home if there are no errors in the form
+  if (count($errors) == 0) {
+
+    //get email of current user logged in / signed up
+    //use to add info to owns table
+    $ho_email = $_SESSION['ho_email'];
+
+    //Query to inset home info into homes table for the homeowner
+  	$homes_query = "INSERT INTO homes (street, city, state, zip, constr_type, floors, h_sq_ft, y_sq_ft) 
+  			  VALUES('$street', '$city', '$state', '$zip_code', '$const_type', '$floor_type', '$h_sqft', '$y_sqft')";
+
+    //Also insert into the owns table
+    //Query to insert homeowner email and home info into owns table
+    $homes_owns_query = "INSERT INTO owns (HO_email, street, city, state, zip)
+          VALUES('$ho_email', '$street', '$city', '$state', '$zip_code')";
+
+    $homes_plants_query = "INSERT INTO plant_types (street, city, state, zip, plant_type)
+          VALUES('$street', '$city', '$state', '$zip_code', '$plant_type')";
+  	mysqli_query($db, $homes_query);
+    mysqli_query($db, $homes_owns_query);
+    mysqli_query($db, $homes_plants_query);
+
+  	$_SESSION['street'] = $street;
+    $_SESSION['city'] = $city;
+    $_SESSION['state'] = $state;
+    $_SESSION['zip_code'] = $zip_code;
+  	$_SESSION['success'] = "Home is registered";
+    $_SESSION['loggedIn'] = TRUE;
+  	header('location: customer_account.php');
+  }
+}
   
   ?>

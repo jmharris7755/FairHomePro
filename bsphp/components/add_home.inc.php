@@ -1,5 +1,5 @@
-<section class="services gradient">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 220">
+<section class="services gradient">    
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 220">
         <path
           fill="#fff"
           fill-opacity="1"
@@ -7,8 +7,8 @@
         ></path>
       </svg>
       <div class="container">
-        <div class="row align-items-center justify-content-left">
-          <div class="col-md-5" style=  "position:absolute; left:50px; top:250px;"><img src="img/logo_solitary.png" alt="" />
+        <div class="d-flex flex-row">
+          <div class="col-lg-5"><img src="img/logo_solitary.png" alt="" />
 
             <h1>Welcome to FairHomePro</h1>
 
@@ -19,9 +19,9 @@
           </div>
           <div class = "container pt-3">
             <div class="row align-items-center justify-content-center">
-                <div class="col-md-5">
+                <div class="col-auto">
                 <h2>My Home:</h2>
-                    <form method="post" action="add_home.php">
+                    <form  method="post" action="add_home.php">
             	    <?php include('errors.inc.php'); ?>
                     <div style="input-group">
   	                    <label>Street:</label>
