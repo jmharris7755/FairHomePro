@@ -1,5 +1,8 @@
 <?php
-session_start();
+if(!isset($_SESSION)){
+
+  session_start();
+}
 
 // initializing variables
 $username = "";
@@ -173,10 +176,10 @@ if (isset($_POST['reg_home'])) {
 
 // LOGIN USER
 if (isset($_POST['login_user'])) {
-    $email = mysqli_real_escape_string($db, $_POST['email']);
+    $ho_email = mysqli_real_escape_string($db, $_POST['ho_email']);
     $password = mysqli_real_escape_string($db, $_POST['password']);
   
-    if (empty($email)) {
+    if (empty($ho_email)) {
         array_push($errors, "Email is required");
     }
     if (empty($password)) {
@@ -185,17 +188,87 @@ if (isset($_POST['login_user'])) {
   
     if (count($errors) == 0) {
         $password = $password;
-        $query = "SELECT name FROM homeowners WHERE email='$email' AND password='$password'";
-        $results = mysqli_query($db, $query);
+        $login_query = "SELECT * FROM homeowners WHERE HO_email='$ho_email' AND password='$password'";
+        $login_results = mysqli_query($db, $login_query);
 
-        if (mysqli_num_rows($results)) {
-          $_SESSION['email'] = $email;
+        if (mysqli_num_rows($login_results)) {
+          while($c_row = mysqli_fetch_array($login_results)){
+              $_SESSION['ho_username'] = $c_row['HO_name'];
+              $_SESSION['ho_email'] = $c_row['HO_email'];
+              $_SESSION['ho_phone'] = $c_row['HO_phone'];
+              $_SESSION['ho_creditcard'] = $c_row['HO_creditcard'];
+              $_SESSION['ho_bankaccount'] = $c_row['HO_bankaccount'];
+          }
           $_SESSION['success'] = "You are now logged in";
           $_SESSION['loggedIn'] = TRUE;
           header('location: index.php');
         }else {
             array_push($errors, "Wrong username/password combination");
         }
+    }
+  }
+
+//Get Account info when Account button is pushed
+if (isset($_POST['customer_account'])) {
+
+  $account_query = "SELECT * FROM homeowners WHERE HO_email='$ho_email'";
+  $account_results = mysqli_query($db, $account_query);
+
+  if (mysqli_num_rows($account_results)) {
+    while($c_row = mysqli_fetch_array($account_results)){
+        $_SESSION['ho_username'] = $c_row['HO_name'];
+        $_SESSION['ho_email'] = $c_row['HO_email'];
+        $_SESSION['ho_phone'] = $c_row['HO_phone'];
+        $_SESSION['ho_creditcard'] = $c_row['HO_creditcard'];
+        $_SESSION['ho_bankaccount'] = $c_row['HO_bankaccount'];
+    }
+  }
+  else {
+      array_push($errors, "Error going to account page");
+  }
+}
+
+  //Query to update customer account info
+  if (isset($_POST['update_c_info'])){
+    $ho_username = mysqli_real_escape_string($db, $_POST['ho_username']);
+    $ho_email = mysqli_real_escape_string($db, $_POST['ho_email']);
+    $ho_phonenumber = mysqli_real_escape_string($db, $_POST['ho_phone']);
+    $ho_creditcard = mysqli_real_escape_string($db, $_POST['ho_creditcard']);
+    $ho_bankaccount = mysqli_real_escape_string($db, $_POST['ho_bankaccount']);
+    
+    
+    if (empty($ho_username)) {
+      array_push($errors, "Name is required");
+    }
+
+    if (empty($ho_phonenumber)) {
+      array_push($errors, "Phone Number is required");
+    }
+
+    if(count($errors) == 0){
+
+      $update_query = "UPDATE homeowners SET HO_name='$ho_username', 
+                      HO_phone = '$ho_phonenumber', HO_creditcard='$ho_creditcard', 
+                      HO_bankaccount='$ho_bankaccount'
+                      WHERE HO_email='$ho_email'";
+
+      $update_info_results = mysqli_query($db, $update_query);
+
+
+    }
+
+    //Get updated info from database
+    $updated_c_info_query = "SELECT * from homeowners WHERE HO_email = '$ho_email'";
+    $updated_c_info_results= mysqli_query($db, $updated_c_info_query);
+
+    if(mysqli_num_rows($updated_c_info_results)){
+      while($c_row = mysqli_fetch_array($updated_c_info_results)){
+        $_SESSION['ho_username'] = $c_row['HO_name'];
+        $_SESSION['ho_email'] = $c_row['HO_email'];
+        $_SESSION['ho_phone'] = $c_row['HO_phone'];
+        $_SESSION['ho_creditcard'] = $c_row['HO_creditcard'];
+        $_SESSION['ho_bankaccount'] = $c_row['HO_bankaccount'];
+      }
     }
   }
   
