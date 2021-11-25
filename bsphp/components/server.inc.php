@@ -32,8 +32,8 @@ if(isset($_POST['reg_business' ])) {
   if (count($errors) == 0) {
   	$sp_password_1 = $sp_password_2;//encrypt the password before saving in the database
 
-  	$query = "INSERT INTO service_pros (b_name, email, password, creditcard, bankaccount, services, SPID) 
-  			  VALUES('$sp_username', '$sp_email', '$sp_password_1', '$sp_creditcard', '$sp_bankaccount', '$sp_password_2', '1')";
+  	$query = "INSERT INTO service_pros (Business_Name, SP_email, SP_password, SP_creditcard, SP_bankaccount) 
+  			  VALUES('$sp_username', '$sp_email', '$sp_password_1', '$sp_creditcard', '$sp_bankaccount')";
   	mysqli_query($db, $query);
     $_SESSION['sp_username'] = $sp_username;
   	$_SESSION['sp_email'] = $sp_email;
