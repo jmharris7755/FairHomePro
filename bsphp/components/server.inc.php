@@ -29,6 +29,24 @@ if(isset($_POST['reg_business' ])) {
 	array_push($errors, "The two passwords do not match");
 }
 
+$user_check_query = "SELECT HO_email
+                        FROM homeowners
+                        WHERE HO_email = '$sp_email'
+                        UNION
+                        SELECT SP_email
+                        FROM service_pros
+                        WHERE SP_email = '$sp_email' ";
+
+                          $result = mysqli_query($db, $user_check_query);
+  $user = mysqli_fetch_assoc($result);
+  
+  if ($user) { // if user exists
+
+    if ($user['HO_email'] == $email || $user['SP_email'] == $email ) {
+      array_push($errors, "email already exists");
+    }
+  }
+
   if (count($errors) == 0) {
   	$sp_password_1 = $sp_password_2;//encrypt the password before saving in the database
 
@@ -68,13 +86,20 @@ if (isset($_POST['reg_user'])) {
 
   // first check the database to make sure 
   // a user does not already exist with the same username and/or email
-  $user_check_query = "SELECT * FROM homeowners WHERE email='$email' LIMIT 1";
+  $user_check_query = "SELECT HO_email
+                        FROM homeowners
+                        WHERE HO_email = '$email'
+                        UNION
+                        SELECT SP_email
+                        FROM service_pros
+                        WHERE SP_email = '$email' ";
+
   $result = mysqli_query($db, $user_check_query);
   $user = mysqli_fetch_assoc($result);
   
   if ($user) { // if user exists
 
-    if ($user['email'] === $email) {
+    if ($user['HO_email'] == $email || $user['SP_email'] == $email ) {
       array_push($errors, "email already exists");
     }
   }
@@ -83,7 +108,7 @@ if (isset($_POST['reg_user'])) {
   if (count($errors) == 0) {
   	$password = $password_1;//encrypt the password before saving in the database
 
-  	$query = "INSERT INTO homeowners (name, email, password, phone, creditcard, bankaccount) 
+  	$query = "INSERT INTO homeowners (HO_name, HO_email, password, HO_phone, HO_creditcard, HO_bankaccount) 
   			  VALUES('$username', '$email', '$password', '$phonenumber', '$creditcard', '$bankaccount')";
   	mysqli_query($db, $query);
   	$_SESSION['email'] = $email;
@@ -108,10 +133,15 @@ if (isset($_POST['login_user'])) {
   
     if (count($errors) == 0) {
         $password = $password;
-        $query = "SELECT name FROM homeowners WHERE email='$email' AND password='$password'";
-        $results = mysqli_query($db, $query);
+        $query = "SELECT HO_name FROM homeowners WHERE HO_email='$email' AND password='$password'";
+        $result = mysqli_query($db, $query);
 
-        if (mysqli_num_rows($results)) {
+        //Fetches a row of data and returns it as an array.
+        $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+
+        //Check if anything was found in the table and if so the login is valid
+       if ($rows) {
           $_SESSION['email'] = $email;
           $_SESSION['success'] = "You are now logged in";
           $_SESSION['loggedIn'] = TRUE;

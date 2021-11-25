@@ -3,7 +3,7 @@
         <div class="row align-items-center justify-content-center">
           <div class="col-md-5">
 		  <h2>Sign In</h2>
-             <form method="post" action="signup.php">
+             <form method="post" action="signin.php">
             	<?php include('errors.inc.php'); ?>
                 	<div class="input-group">
   	                     <label>Email</label>
