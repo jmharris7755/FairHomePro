@@ -136,8 +136,13 @@ if (isset($_POST['login_user'])) {
         $query = "SELECT HO_name FROM homeowners WHERE HO_email='$email' AND password='$password'";
         $result = mysqli_query($db, $query);
 
+        //Second query checks the service pro table
+        $sp_query = "SELECT Business_Name FROM service_pros WHERE SP_email='$email' AND SP_password='$password'";
+        $sp_result = mysqli_query($db, $sp_query);
+
         //Fetches a row of data and returns it as an array.
         $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        $sp_rows = mysqli_fetch_all($sp_result, MYSQLI_ASSOC);
 
 
         //Check if anything was found in the table and if so the login is valid
@@ -146,7 +151,18 @@ if (isset($_POST['login_user'])) {
           $_SESSION['success'] = "You are now logged in";
           $_SESSION['loggedIn'] = TRUE;
           header('location: index.php');
-        }else {
+        }
+        else if($sp_rows){
+            //If logging in as a normal user fails attempt to login as a service pro/business
+                    if($sp_rows) {
+                            $_SESSION['sp_username'] = $username;
+  	                        $_SESSION['sp_email'] = $email;
+  	                        $_SESSION['success'] = "You are now logged in";
+                            $_SESSION['loggedIn'] = TRUE;
+                            header('location: index.php');
+                        }
+                    }
+                    else {
             array_push($errors, "Wrong username/password combination");
         }
     }

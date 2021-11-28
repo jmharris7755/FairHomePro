@@ -9,6 +9,16 @@ CREATE TABLE IF NOT EXISTS homeowners(
     HO_bankaccount BIGINT UNSIGNED
 );
 
+#Create service_types table
+CREATE TABLE IF NOT EXISTS service_types(
+	service_ID int AUTO_INCREMENT,
+    service VARCHAR(45) NOT NULL,
+	primary key (service_ID)
+);
+
+INSERT INTO service_types(service)
+VALUES ("Lawn Mowing"), ("Window Cleaning"), ("Hedge Trimming"), ("Garden upkeeping");
+
 # Create the homes table
 CREATE TABLE IF NOT EXISTS homes(
     street VARCHAR(100) NOT NULL,
