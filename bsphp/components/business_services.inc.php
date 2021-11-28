@@ -9,9 +9,10 @@
       <div class="container">
         <div class="row align-items-center justify-content-center">
           <div class="col-md-5">
-            <button type="button" class="btn btn-outline-warning mb-3">
-              Coding
-            </button>
+						  <button onclick="window.location.href='service_pro_settings.php'"
+						  type="button" 
+						  class = "btn btn-outline-success">
+						  Account Settings</button>
 
             <h1>Testing different link</h1>
 

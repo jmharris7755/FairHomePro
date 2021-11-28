@@ -55,6 +55,9 @@ $user_check_query = "SELECT HO_email
   	mysqli_query($db, $query);
     $_SESSION['sp_username'] = $sp_username;
   	$_SESSION['sp_email'] = $sp_email;
+    $_SESSION['password'] = $sp_password_1;
+    $_SESSION['creditcard'] = $sp_creditcard;
+    $_SESSION['bankaccount'] = sp_bankaccount;
   	$_SESSION['success'] = "You are now logged in";
     $_SESSION['loggedIn'] = TRUE;
   	header('location: index.php');
@@ -159,6 +162,16 @@ if (isset($_POST['login_user'])) {
   	                        $_SESSION['sp_email'] = $email;
   	                        $_SESSION['success'] = "You are now logged in";
                             $_SESSION['loggedIn'] = TRUE;
+
+                            $query =    "SELECT * FROM service_pros WHERE SP_email = '$email'";
+
+                            $result = mysqli_query($db, $query);
+                            $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+                                $_SESSION['sp_username'] = $row["Business_Name"];
+  	                            $_SESSION['sp_email'] = $row["SP_email"];
+                                $_SESSION['password'] = $row["SP_password"];
+                                $_SESSION['creditcard'] = $row["SP_creditcard"];
+                                $_SESSION['bankaccount'] = $row["SP_bankaccount"];
                             header('location: index.php');
                         }
                     }
