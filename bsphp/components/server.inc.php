@@ -219,6 +219,10 @@ if (isset($_POST['login_user'])) {
         $login_query = "SELECT * FROM homeowners WHERE HO_email='$ho_email' AND password='$password'";
         $login_results = mysqli_query($db, $login_query);
 
+        $sp_query = "SELECT Business_Name FROM service_pros WHERE SP_email='$ho_email' AND SP_password='$password'";
+        $sp_result = mysqli_query($db, $sp_query);
+        $sp_rows = mysqli_fetch_all($sp_result, MYSQLI_ASSOC);
+
         if (mysqli_num_rows($login_results)) {
           while($c_row = mysqli_fetch_array($login_results)){
               $_SESSION['ho_username'] = $c_row['HO_name'];
@@ -239,7 +243,7 @@ if (isset($_POST['login_user'])) {
   	                        $_SESSION['success'] = "You are now logged in";
                             $_SESSION['loggedIn'] = TRUE;
 
-                            $query =    "SELECT * FROM service_pros WHERE SP_email = '$email'";
+                            $query =    "SELECT * FROM service_pros WHERE SP_email = '$ho_email'";
 
                             $result = mysqli_query($db, $query);
                             $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
