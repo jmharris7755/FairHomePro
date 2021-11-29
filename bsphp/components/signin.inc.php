@@ -3,8 +3,9 @@
         <div class="row align-items-center justify-content-center">
           <div class="col-md-5">
 		  <h2>Sign In</h2>
-             <form method="post" action="signin.php">
+             <form  method="post" action="signin.php">
             	<?php include('errors.inc.php'); ?>
+				<div class="table-responsive">
                 	<div class="input-group">
   	                     <label>Email</label>
 						   <?php
@@ -13,7 +14,7 @@
                           ?>
   	                     <input 
                            type="email" 
-                           name="email" 
+                           name="ho_email" 
                            value="<?php echo $email; ?>"
                         >
   	                </div>
@@ -28,6 +29,7 @@
                           name="password"
                         >
   	                </div>
+					</div>
   	                <div class="input-group">
   	                 <button onclick="window.location.href='index.php'"
 					   		type="submit" 

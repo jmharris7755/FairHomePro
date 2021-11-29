@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS homes(
     floors VARCHAR(45) NOT NULL,
     h_sq_ft BIGINT UNSIGNED NOT NULL,
     y_sq_ft BIGINT UNSIGNED NOT NULL,
-	primary key (state, zip, city, street)
+	PRIMARY KEY (state, zip, city, street)
 );
 
 CREATE TABLE IF NOT EXISTS owns(
