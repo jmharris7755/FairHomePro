@@ -10,6 +10,7 @@ unset($_SESSION["bankaccount"]);
 unset($_SESSION["creditcard"]);
 unset($_SESSION["sp_password_1"]);
 unset($_SESSION["username"]);
+unset($_SESSION["sp_phone"]);
 
 session_destroy();
 header("Location:index.php");

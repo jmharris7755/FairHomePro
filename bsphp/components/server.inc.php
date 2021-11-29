@@ -21,7 +21,7 @@ if(isset($_POST['reg_business' ])) {
   $sp_email = mysqli_real_escape_string($db, $_POST['sp_email']);
   $sp_password_1 = mysqli_real_escape_string($db, $_POST['sp_password_1']);
   $sp_password_2 = mysqli_real_escape_string($db, $_POST['sp_password_2']);
-  $sp_phonenumber = mysqli_real_escape_string($db, $_POST['sp_phonenumber']);
+  $sp_phone = mysqli_real_escape_string($db, $_POST['sp_phone']);
   $sp_creditcard = mysqli_real_escape_string($db, $_POST['sp_creditcard']);
   $sp_bankaccount = mysqli_real_escape_string($db, $_POST['sp_bankaccount']);
 
@@ -45,7 +45,7 @@ $user_check_query = "SELECT HO_email
   
   if ($user) { // if user exists
 
-    if ($user['HO_email'] == $email || $user['SP_email'] == $email ) {
+    if ($user['HO_email'] == $sp_email || $user['SP_email'] == $sp_email ) {
       array_push($errors, "email already exists");
     }
   }
@@ -53,14 +53,15 @@ $user_check_query = "SELECT HO_email
   if (count($errors) == 0) {
   	$sp_password_1 = $sp_password_2;//encrypt the password before saving in the database
 
-  	$query = "INSERT INTO service_pros (Business_Name, SP_email, SP_password, SP_creditcard, SP_bankaccount) 
-  			  VALUES('$sp_username', '$sp_email', '$sp_password_1', '$sp_creditcard', '$sp_bankaccount')";
+  	$query = "INSERT INTO service_pros (Business_Name, SP_phone, SP_email, SP_password, SP_creditcard, SP_bankaccount) 
+  			  VALUES('$sp_username', $sp_phone, '$sp_email', '$sp_password_1', '$sp_creditcard', '$sp_bankaccount')";
   	mysqli_query($db, $query);
     $_SESSION['sp_username'] = $sp_username;
   	$_SESSION['sp_email'] = $sp_email;
+    $_SESSION['sp_phone'] = $sp_phone;
     $_SESSION['password'] = $sp_password_1;
-    $_SESSION['creditcard'] = $sp_creditcard;
-    $_SESSION['bankaccount'] = sp_bankaccount;
+    $_SESSION['sp_creditcard'] = $sp_creditcard;
+    $_SESSION['sp_bankaccount'] = $sp_bankaccount;
   	$_SESSION['success'] = "You are now logged in";
     $_SESSION['loggedIn'] = TRUE;
   	header('location: index.php');
@@ -249,9 +250,10 @@ if (isset($_POST['login_user'])) {
                             $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
                                 $_SESSION['sp_username'] = $row["Business_Name"];
   	                            $_SESSION['sp_email'] = $row["SP_email"];
-                                $_SESSION['password'] = $row["SP_password"];
-                                $_SESSION['creditcard'] = $row["SP_creditcard"];
-                                $_SESSION['bankaccount'] = $row["SP_bankaccount"];
+                                $_SESSION['sp_password'] = $row["SP_password"];
+                                $_SESSION['sp_creditcard'] = $row["SP_creditcard"];
+                                $_SESSION['sp_bankaccount'] = $row["SP_bankaccount"];
+                                $_SESSION['sp_phone'] = $row['SP_phone'];
                             header('location: index.php');
                         }
                     }
@@ -259,6 +261,26 @@ if (isset($_POST['login_user'])) {
             array_push($errors, "Wrong username/password combination");
         }
     }
+  }
+  //Get Account info when Account button is pushed SERVICE PROS
+if (isset($_POST['sp_account'])) {
+  $sp_email = $_SESSION['sp_email'];
+  $account_query = "SELECT * FROM service_pros WHERE SP_email='$sp_email'";
+  $account_results = mysqli_query($db, $account_query);
+
+
+  if (mysqli_num_rows($account_results)) {
+    while($sp_row = mysqli_fetch_array($account_results)){
+        $_SESSION['sp_username'] = $sp_row['Business_Name'];
+        $_SESSION['sp_email'] = $sp_row['SP_email'];
+        $_SESSION['sp_phone'] = $sp_row['SP_phone'];
+        $_SESSION['sp_creditcard'] = $sp_row['SP_creditcard'];
+        $_SESSION['sp_bankaccount'] = $sp_row['SP_bankaccount'];
+    }
+  }
+  else {
+      array_push($errors, "Error going to account page");
+  }
   }
 
 //Get Account info when Account button is pushed
@@ -281,6 +303,87 @@ if (isset($_POST['customer_account'])) {
       array_push($errors, "Error going to account page");
   }
   
+}
+
+//Get Service information
+function sp_create_services_table(){
+    $sp_email = $_SESSION['sp_email'];
+    $db = mysqli_connect('localhost', 'root', '', 'fairhomepro');
+
+    $services_query = "SELECT s_type, s_price FROM services WHERE SP_email = '$sp_email'";
+
+    $services_query_results = mysqli_query($db, $services_query);
+
+    if (mysqli_num_rows($services_query_results)){
+        $field = mysqli_fetch_fields($service_query_results);
+        $fields = array();
+        $j=0;
+        $service_num=1;
+
+    echo "<th>Home</th>";
+    foreach($field as $col){
+      echo "<th>".$col->name."</th>";
+      array_push($fields, array(++$j, $col->name));
+    }
+    echo "</tr>";
+
+    while($sp_row = fetch_array($account_homes_results)){
+      echo "<tr>";
+      echo "<td>$home_num</td>";
+      for($i=0 ; $i < sizeof($fields) ; $i++){
+        $fieldname = $fields[$i][1];
+        $fieldvalue = $sp_row[$fieldname];
+        
+        echo "<td><input type='text' value='" . $fieldvalue . "'readonly ></td>";
+      }
+      $service_num++;
+      echo "</tr>";
+    }
+    }
+    }
+
+//Query to update service provider account info
+if (isset($_POST['update_sp_info'])){
+  $sp_username = mysqli_real_escape_string($db, $_POST['sp_username']);
+  $sp_email = mysqli_real_escape_string($db, $_POST['sp_email']);
+  $sp_phone = mysqli_real_escape_string($db, $_POST['sp_phone']);
+  $sp_creditcard = mysqli_real_escape_string($db, $_POST['sp_creditcard']);
+  $sp_bankaccount = mysqli_real_escape_string($db, $_POST['sp_bankaccount']);
+    
+    
+  if (empty($sp_username)) {
+     array_push($errors, "Name is required");
+  }
+
+  if (empty($sp_phone)) {
+     array_push($errors, "Phone Number is required");
+  }
+
+  if(count($errors) == 0){
+
+    $update_query = "UPDATE service_pros SET Business_Name ='$sp_username', 
+                    SP_phone = '$sp_phone', SP_creditcard='$sp_creditcard', 
+                    SP_bankaccount='$sp_bankaccount'
+                    WHERE SP_email='$sp_email'";
+
+    $update_info_results = mysqli_query($db, $update_query);
+
+
+    }
+
+  //Get updated info from database
+  $updated_sp_info_query = "SELECT * from service_pros WHERE SP_email = '$sp_email'";
+  $updated_sp_info_results= mysqli_query($db, $updated_sp_info_query);
+
+  if(mysqli_num_rows($updated_sp_info_results)){
+    while($sp_row = mysqli_fetch_array($updated_sp_info_results)){
+      $_SESSION['sp_username'] = $sp_row['Business_Name'];
+      $_SESSION['sp_email'] = $sp_row['SP_email'];
+      $_SESSION['sp_phone'] = $sp_row['SP_phone'];
+      $_SESSION['sp_creditcard'] = $sp_row['SP_creditcard'];
+      $_SESSION['sp_bankaccount'] = $sp_row['SP_bankaccount'];
+    }
+  }
 }
 
 //Get Homes information

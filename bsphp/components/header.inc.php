@@ -100,6 +100,15 @@
               class="btn btn-outline-info btn-lg">
             Services
           </button>
+                    <button onclick="window.location.href='service_pro_settings.php'
+                          <?php $_SESSION['sp_info_edit'] = FALSE; ?>
+                          <?php $_SESSION['sp_service_edit'] = FALSE; ?>"
+              type="button" 
+              class="btn btn-outline-warning btn-lg"
+              name=sp_account
+              >
+            Account
+          </button>
 
        <?php endif; ?>         
         </div>
