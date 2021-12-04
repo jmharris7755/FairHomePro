@@ -145,6 +145,44 @@
       </div>
     <!----------------A A Home Modal End --------------------------------->
 
+
+
+    <!----------------Add A Service Modal Start --------------------------------->
+      <div class="modal" tabindex="-1" id="addAServiceModal">
+          <div class="modal-dialog">
+          <form method="post" action="#" class="modal-content">
+              <div class="modal-header">
+              <h5 class="modal-title">Add A Service</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+              </div>
+              <div class="modal-body">
+                <div class="mb-3">
+                    <label for="price" class="form-label">Price</label>
+                    <input type="number" step=0.01 class="form-control" id="price" name="price" placeholder="Example Price 2.50" required>
+                </div>
+                <div class="mb-3">
+                    <label for="service_type" class="form-label">Service offered</label><br>
+                    <select name="service_type" required>
+                        <option value="">-- </option>
+                        <option value="Lawn_Mowing">Lawn Mowing </option>
+                        <option value="Window_Cleaning">Window Cleaning </option>
+                        <option value="Hedge_Trimming">Hedge Trimming </option>
+                        <option value="Garden_upkeeping">Garden upkeeping </option>
+                    </select required>
+                </div>
+            </div>
+              <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              <button name="add_service_modal" type="submit" class="btn btn-primary">Add Service</button>
+              </div>
+          </form>
+          </div>
+      </div>
+    <!----------------A Service Modal End --------------------------------->
+
+
       <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script> 
     <script src="js/bootstrap.min.js"></script>
     <script src="js/styles.js"></script>

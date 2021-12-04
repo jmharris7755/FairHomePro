@@ -276,6 +276,7 @@ if (isset($_POST['sp_account'])) {
         $_SESSION['sp_phone'] = $sp_row['SP_phone'];
         $_SESSION['sp_creditcard'] = $sp_row['SP_creditcard'];
         $_SESSION['sp_bankaccount'] = $sp_row['SP_bankaccount'];
+        $_SESSION['sp_password'] = $sp_row['SP_password'];
     }
   }
   else {
@@ -311,25 +312,22 @@ function sp_create_services_table(){
     $db = mysqli_connect('localhost', 'root', '', 'fairhomepro');
 
     $services_query = "SELECT s_type, s_price FROM services WHERE SP_email = '$sp_email'";
-
     $services_query_results = mysqli_query($db, $services_query);
 
+
     if (mysqli_num_rows($services_query_results)){
-        $field = mysqli_fetch_fields($service_query_results);
+        $field = mysqli_fetch_fields($services_query_results);
         $fields = array();
         $j=0;
         $service_num=1;
-
-    echo "<th>Home</th>";
     foreach($field as $col){
       echo "<th>".$col->name."</th>";
       array_push($fields, array(++$j, $col->name));
     }
     echo "</tr>";
 
-    while($sp_row = fetch_array($account_homes_results)){
+    while($sp_row = $services_query_results->fetch_array()){
       echo "<tr>";
-      echo "<td>$home_num</td>";
       for($i=0 ; $i < sizeof($fields) ; $i++){
         $fieldname = $fields[$i][1];
         $fieldvalue = $sp_row[$fieldname];
@@ -349,6 +347,7 @@ if (isset($_POST['update_sp_info'])){
   $sp_phone = mysqli_real_escape_string($db, $_POST['sp_phone']);
   $sp_creditcard = mysqli_real_escape_string($db, $_POST['sp_creditcard']);
   $sp_bankaccount = mysqli_real_escape_string($db, $_POST['sp_bankaccount']);
+  $sp_password = mysqli_real_escape_string($db, $_POST['sp_password']);
     
     
   if (empty($sp_username)) {
@@ -363,7 +362,8 @@ if (isset($_POST['update_sp_info'])){
 
     $update_query = "UPDATE service_pros SET Business_Name ='$sp_username', 
                     SP_phone = '$sp_phone', SP_creditcard='$sp_creditcard', 
-                    SP_bankaccount='$sp_bankaccount'
+                    SP_bankaccount='$sp_bankaccount',
+                    SP_password='$sp_password'
                     WHERE SP_email='$sp_email'";
 
     $update_info_results = mysqli_query($db, $update_query);
@@ -382,6 +382,7 @@ if (isset($_POST['update_sp_info'])){
       $_SESSION['sp_phone'] = $sp_row['SP_phone'];
       $_SESSION['sp_creditcard'] = $sp_row['SP_creditcard'];
       $_SESSION['sp_bankaccount'] = $sp_row['SP_bankaccount'];
+      $_SESSION['sp_password'] = $sp_row['SP_password'];
     }
   }
 }
@@ -470,6 +471,37 @@ if (isset($_POST['update_c_info'])){
   }
 }
 
+// Add Services to services table
+if (isset($_POST['add_service_modal'])){
+// receive all input values from the form
+    $price= mysqli_real_escape_string($db, $_POST['price']);
+    $service_offering= mysqli_real_escape_string($db, $_POST['service_type']);
+    $sp_email = $_SESSION['sp_email'];
+    if($service_offering ==""){array_push($errors, "Please pick a service"); }  
+    if($price == ""){array_push($errors, "Please add a price"); }
+
+  $service_check_query = "SELECT * FROM services WHERE SP_email='$sp_email' AND s_type='$service_offering'LIMIT 1";
+  $service_result = mysqli_query($db, $service_check_query);
+  $service = mysqli_fetch_assoc($service_result);
+
+  if($service)
+  {
+    if ($service['s_type'] === $service_offering && $service['SP_email'] === $sp_email)
+    {
+      array_push($errors, "Service already exists");
+     }
+  }
+   if (count($errors) == 0)
+   {
+  	$service_insert_query = "INSERT INTO services (SP_email, s_price, s_type) 
+  			  VALUES('$sp_email', '$price', '$service_offering')";
+
+  	mysqli_query($db, $service_insert_query);
+   }
+
+
+}
+
 // Add Home to Homes table from the Account page
 if (isset($_POST['add_home_modal'])) {
   // receive all input values from the form
@@ -487,7 +519,7 @@ if (isset($_POST['add_home_modal'])) {
   // by adding (array_push()) corresponding error unto $errors array
   if (empty($street)) { array_push($errors, "Street is required"); }
   if (empty($city)) { array_push($errors, "City is required"); }
-  if (empty($state)) { array_push($errors, "State is required"); }
+  if ($state =='NULL') { array_push($errors, "State is required"); }
   if (empty($zip_code)) { array_push($errors, "Zip code is required"); }
   if (empty($const_type)) { array_push($errors, "Construction Type is required"); }
   if (empty($floor_type)) { array_push($errors, "Floor Type is required"); }
@@ -540,5 +572,6 @@ if (isset($_POST['add_home_modal'])) {
   	header('location: customer_account.php');
   }
 }
+
   
   ?>

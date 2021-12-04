@@ -31,6 +31,10 @@
                         <th>Bank Account: </th>
                         <td><input type="text" name="sp_bankaccount" value ="<?php echo $_SESSION['sp_bankaccount']; ?>"/> </td>
                     </tr>
+                    <tr>
+                        <th>New Password: </th>
+                        <td><input type="password" name="sp_password" value ="<?php echo $_SESSION['sp_password']; ?>"/> </td>
+                    </tr>
                 </table>
                 <button 
 						  type="submit" 
