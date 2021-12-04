@@ -103,12 +103,12 @@
                         >
 						Add a service
                 </button>
-                <button  onclick= "window.location.href='add_service.php'"
+                <button  id="EditServicesBtn"
 						  type="button" 
 						  class = "btn btn-outline-success"
-                          name = "edit_home"
+                          name = "edit_service"
                           >
-						  Edit Homes
+						  Edit Services
                 </button>
                 </form> 
             </div>

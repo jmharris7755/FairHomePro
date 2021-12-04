@@ -60,6 +60,7 @@ $user_check_query = "SELECT HO_email
   	$_SESSION['sp_email'] = $sp_email;
     $_SESSION['sp_phone'] = $sp_phone;
     $_SESSION['password'] = $sp_password_1;
+    $_SESSION['sp_password'] = $sp_password_1;
     $_SESSION['sp_creditcard'] = $sp_creditcard;
     $_SESSION['sp_bankaccount'] = $sp_bankaccount;
   	$_SESSION['success'] = "You are now logged in";
@@ -314,7 +315,7 @@ function sp_create_services_table(){
     $services_query = "SELECT s_type, s_price FROM services WHERE SP_email = '$sp_email'";
     $services_query_results = mysqli_query($db, $services_query);
 
-
+    
     if (mysqli_num_rows($services_query_results)){
         $field = mysqli_fetch_fields($services_query_results);
         $fields = array();
@@ -471,6 +472,18 @@ if (isset($_POST['update_c_info'])){
   }
 }
 
+// Update services in the services table
+if (isset($_POST['edit_service_modal'])){
+    $price= mysqli_real_escape_string($db, $_POST['price']);
+    $sp_email = $_SESSION['sp_email'];
+    $service_type = mysqli_real_escape_string($db, $_POST['service_type']);
+
+        $update_query = "UPDATE services 
+                         SET s_price ='$price'
+                         WHERE SP_email='$sp_email' AND s_type = '$service_type'";
+        $query_results = mysqli_query($db, $update_query);
+}
+    
 // Add Services to services table
 if (isset($_POST['add_service_modal'])){
 // receive all input values from the form

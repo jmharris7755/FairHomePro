@@ -166,10 +166,14 @@
                     <label for="service_type" class="form-label">Service offered</label><br>
                     <select name="service_type" required>
                         <option value="">-- </option>
-                        <option value="Lawn_Mowing">Lawn Mowing </option>
-                        <option value="Window_Cleaning">Window Cleaning </option>
-                        <option value="Hedge_Trimming">Hedge Trimming </option>
-                        <option value="Garden_upkeeping">Garden upkeeping </option>
+                    <?php $db_modal = mysqli_connect('localhost', 'root', '', 'fairhomepro');
+                     $services_query = "SELECT service FROM service_types";
+                     $test_query = mysqli_query($db_modal, $services_query);
+                     while($temp = mysqli_fetch_assoc($test_query))
+                     {    
+                          echo "<option value= \"" . $temp['service'] . "\">" . $temp['service'] . "</option>";
+                     }
+                     ?>
                     </select required>
                 </div>
             </div>
@@ -181,6 +185,72 @@
           </div>
       </div>
     <!----------------A Service Modal End --------------------------------->
+
+    <!----------------Test --------------------------------->
+
+                        <?php 
+                        /*
+                        $db_modal = mysqli_connect('localhost', 'root', '', 'fairhomepro');
+                        $services_query = "SELECT service FROM service_types";
+                        $test_query = mysqli_query($db_modal, $services_query);
+                        $temp = mysql_fetch_assoc($test_query);
+                        echo "<option value =\"" . $temp['service'] . "\"> yeet </option>";     
+                        echo "</select required>";
+                        */
+                        ?>
+
+   <!----------------Test End --------------------------------->
+
+
+    <!----------------Edit a Service Modal Start --------------------------------->
+      <div class="modal" tabindex="-1" id="EditAServiceModal">
+          <div class="modal-dialog">
+          <form method="post" action="#" class="modal-content">
+              <div class="modal-header">
+              <h5 class="modal-title">Edit A Service</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+              </div>
+              <div class="modal-body">
+                <div class="mb-3">
+                    <label for="price" class="form-label">Price</label>
+                    <input type="number" step=0.01 class="form-control" id="price" name="price" placeholder="Example Price 2.50" required>
+                </div>
+                <div class="mb-3">
+                    <label for="service_type" class="form-label">Service offered</label><br>
+                    <select name="service_type" required>
+                    <option value="">-- </option>
+                    <?php
+
+                    //Display services provided from the service_types table
+
+                    $db_modal = mysqli_connect('localhost', 'root', '', 'fairhomepro');
+                    $sp_email = $_SESSION['sp_email'];
+                     $services_query = "SELECT service FROM service_types
+                                        WHERE service IN (SELECT s_type AS Service
+                                                          FROM services
+                                                          WHERE SP_email = '$sp_email')";
+                     $test_query = mysqli_query($db_modal, $services_query);
+
+                     //Loops through all possible services
+
+                     while($temp = mysqli_fetch_assoc($test_query))
+                     {    
+                          echo "<option value= \"" . $temp['service'] . "\">" . $temp['service'] . "</option>";
+                     }
+                     ?>
+                    </select required>
+                </div>
+            </div>
+              <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              <button name="edit_service_modal" type="submit" class="btn btn-primary">Edit Service</button>
+              </div>
+          </form>
+          </div>
+      </div>
+    <!----------------Edit a Service Modal End --------------------------------->
 
 
       <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script> 

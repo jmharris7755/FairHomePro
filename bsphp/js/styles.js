@@ -22,3 +22,15 @@ addAServiceBtn.addEventListener('click', function () {
 })
 }
 //Add A Service Modal end
+//Edit A service Modal start
+if (document.getElementById('EditServicesBtn'))
+{
+var EditServicesBtn = document.getElementById('EditServicesBtn');
+var EditAServiceModal = new bootstrap.Modal(document.getElementById('EditAServiceModal'), {
+    keyboard: false
+})
+EditServicesBtn.addEventListener('click', function () {
+    EditAServiceModal.toggle();
+})
+}
+//Edit A service Modal end
