@@ -126,7 +126,10 @@ if (isset($_POST['reg_user'])) {
   	mysqli_query($db, $homeowner_query);
     //mysqli_query($db, $owner_owns_query);
   	$_SESSION['ho_email'] = $ho_email;
-    $_SESSION['c_name'] = $ho_username;
+    $_SESSION['ho_username'] = $ho_username;
+    $_SESSION['ho_phone'] = $ho_phonenumber;
+    $_SESSION['ho_creditcard'] = $ho_creditcard;
+    $_SESSION['ho_bankaccount'] = $ho_bankaccount;
   	$_SESSION['success'] = "You are now logged in";
     $_SESSION['loggedIn'] = TRUE;
   	header('location: add_home.php');
@@ -179,18 +182,33 @@ if (isset($_POST['reg_home'])) {
     //use to add info to owns table
     $ho_email = $_SESSION['ho_email'];
 
+    //Get max value of home_ID in homes table
+    $homeID_max_query = "SELECT MAX(home_ID) as m from homes";
+    $homeID_max_result = mysqli_query($db, $homeID_max_query);
+    $homeID_max = mysqli_fetch_array($homeID_max_result);
+
+    //if homeID is empty (i.e. homes table is empty) set home_ID to 1
+    if(!$homeID_max){
+      $home_ID = 1;
+    }
+    else{
+      //Otherwise increment max value by 1
+      $home_ID = $homeID_max[0] + 1;
+    }
+
     //Query to inset home info into homes table for the homeowner
-  	$homes_query = "INSERT INTO homes (street, city, state, zip, constr_type, floors, h_sq_ft, y_sq_ft) 
-  			  VALUES('$street', '$city', '$state', '$zip_code', '$const_type', '$floor_type', '$h_sqft', '$y_sqft')";
+  	$homes_query = "INSERT INTO homes (home_ID, street, city, state, zip, constr_type, floors, h_sq_ft, y_sq_ft) 
+  			  VALUES('$home_ID', '$street', '$city', '$state', '$zip_code', '$const_type', '$floor_type', '$h_sqft', '$y_sqft')";
 
     //Also insert into the owns table
     //Query to insert homeowner email and home info into owns table
-    $homes_owns_query = "INSERT INTO owns (HO_email, street, city, state, zip)
-          VALUES('$ho_email', '$street', '$city', '$state', '$zip_code')";
+    $homes_owns_query = "INSERT INTO owns (home_ID, HO_email, street, city, state, zip)
+          VALUES('$home_ID', '$ho_email', '$street', '$city', '$state', '$zip_code')";
 
-    $homes_plants_query = "INSERT INTO plant_types (street, city, state, zip, plant_type)
-          VALUES('$street', '$city', '$state', '$zip_code', '$plant_type')";
-  	mysqli_query($db, $homes_query);
+    $homes_plants_query = "INSERT INTO plant_types (home_ID, plant_type)
+          VALUES('$home_ID', '$plant_type')";
+
+    mysqli_query($db, $homes_query);
     mysqli_query($db, $homes_owns_query);
     mysqli_query($db, $homes_plants_query);
 
@@ -287,7 +305,7 @@ if (isset($_POST['sp_account'])) {
 
 //Get Account info when Account button is pushed
 if (isset($_POST['customer_account'])) {
-
+  $ho_email = $SESSION['HO_email'];
   $account_query = "SELECT * FROM homeowners WHERE HO_email='$ho_email'";
   $account_results = mysqli_query($db, $account_query);
 
@@ -393,7 +411,7 @@ function account_create_homes_table(){
   $ho_email = $_SESSION['ho_email'];
   $db = mysqli_connect('localhost', 'root', '', 'fairhomepro');
 
-  $account_homes_query = "SELECT street, city, state, zip FROM homeowners, owns WHERE homeowners.HO_email='$ho_email'
+  $account_homes_query = "SELECT home_ID, street, city, state, zip FROM homeowners, owns WHERE homeowners.HO_email='$ho_email'
                           AND homeowners.HO_email = owns.HO_email";
 
   $account_homes_results = mysqli_query($db, $account_homes_query);
@@ -404,11 +422,51 @@ function account_create_homes_table(){
     $fields = array();
     $j=0;
     $home_num=1;
+    $column_name = '';
 
 
-    echo "<th>Home</th>";
+    //echo "<th>Home</th>";
     foreach($field as $col){
-      echo "<th>".$col->name."</th>";
+      //Switch case for adjusting Table Column Names
+      switch($col->name){
+        case 'home_ID':
+          $column_name = 'Home';
+          break;
+
+        case 'street':
+          $column_name = 'Street';
+          break;
+
+        case 'city':
+          $column_name = 'City';
+          break;
+
+        case 'state':
+          $column_name = 'State';
+          break;
+
+        case 'zip':
+          $column_name = 'Zip';
+          break;
+
+        case 'constr_type':
+          $column_name = 'Contruction Type';
+          break;
+
+        case 'floors':
+          $column_name = 'Floors';
+          break;
+
+        case 'h_sq_ft':
+          $column_name = 'Home Sq.Ft.';
+          break;
+
+        case 'y_sq_ft':
+          $column_name = 'Yard Sq.Ft.';
+          break;
+
+      }
+      echo "<th>".$column_name."</th>";
       array_push($fields, array(++$j, $col->name));
     }
     echo "</tr>";
@@ -416,7 +474,7 @@ function account_create_homes_table(){
     while($c_row = $account_homes_results->fetch_array()){
       echo "<tr>";
       echo "<td>$home_num</td>";
-      for($i=0 ; $i < sizeof($fields) ; $i++){
+      for($i=1 ; $i < sizeof($fields) ; $i++){
         $fieldname = $fields[$i][1];
         $fieldvalue = $c_row[$fieldname];
         
@@ -561,17 +619,31 @@ if (isset($_POST['add_home_modal'])) {
     //use to add info to owns table
     $ho_email = $_SESSION['ho_email'];
 
+    //Get max value for home_ID in homes table
+    $homeID_max_query = "SELECT MAX(home_ID) as m from homes";
+    $homeID_max_result = mysqli_query($db, $homeID_max_query);
+    $homeID_max = mysqli_fetch_array($homeID_max_result);
+
+    //if home_ID is null set to 1
+    if(!$homeID_max){
+      $home_ID = 1;
+    }
+    else{
+      //otherwise increment max value by 1
+      $home_ID = $homeID_max[0] + 1;
+    }
+
     //Query to inset home info into homes table for the homeowner
-  	$homes_query = "INSERT INTO homes (street, city, state, zip, constr_type, floors, h_sq_ft, y_sq_ft) 
-  			  VALUES('$street', '$city', '$state', '$zip_code', '$const_type', '$floor_type', '$h_sqft', '$y_sqft')";
+  	$homes_query = "INSERT INTO homes (home_ID, street, city, state, zip, constr_type, floors, h_sq_ft, y_sq_ft) 
+  			  VALUES('$home_ID', '$street', '$city', '$state', '$zip_code', '$const_type', '$floor_type', '$h_sqft', '$y_sqft')";
 
     //Also insert into the owns table
     //Query to insert homeowner email and home info into owns table
-    $homes_owns_query = "INSERT INTO owns (HO_email, street, city, state, zip)
-          VALUES('$ho_email', '$street', '$city', '$state', '$zip_code')";
+    $homes_owns_query = "INSERT INTO owns (home_ID, HO_email, street, city, state, zip)
+          VALUES('$home_ID', '$ho_email', '$street', '$city', '$state', '$zip_code')";
 
-    $homes_plants_query = "INSERT INTO plant_types (street, city, state, zip, plant_type)
-          VALUES('$street', '$city', '$state', '$zip_code', '$plant_type')";
+    $homes_plants_query = "INSERT INTO plant_types (home_ID, plant_type)
+          VALUES('$home_ID', '$plant_type')";
   	mysqli_query($db, $homes_query);
     mysqli_query($db, $homes_owns_query);
     mysqli_query($db, $homes_plants_query);

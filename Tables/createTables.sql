@@ -21,6 +21,7 @@ VALUES ("Lawn Mowing"), ("Window Cleaning"), ("Hedge Trimming"), ("Garden upkeep
 
 # Create the homes table
 CREATE TABLE IF NOT EXISTS homes(
+    home_ID INT PRIMARY KEY UNIQUE NOT NULL,
     street VARCHAR(100) NOT NULL,
     city VARCHAR(45) NOT NULL,
     state VARCHAR(21) NOT NULL,
@@ -28,34 +29,31 @@ CREATE TABLE IF NOT EXISTS homes(
     constr_type VARCHAR(45) NOT NULL,
     floors VARCHAR(45) NOT NULL,
     h_sq_ft BIGINT UNSIGNED NOT NULL,
-    y_sq_ft BIGINT UNSIGNED NOT NULL,
-	PRIMARY KEY (state, zip, city, street)
+    y_sq_ft BIGINT UNSIGNED NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS owns(
+    home_ID INT NOT NULL,
 	HO_email VARCHAR(45) NOT NULL,
 	zip BIGINT UNSIGNED NOT NULL,
 	state VARCHAR(21) NOT NULL,
 	city VARCHAR(45) NOT NULL,
 	street VARCHAR(100) NOT NULL,
-	FOREIGN KEY (state, zip, city, street) REFERENCES homes(state, zip, city, street),
+    FOREIGN KEY (home_ID) REFERENCES homes(home_ID),
     FOREIGN KEY (HO_email) REFERENCES homeowners(HO_email)
 );
 
 # Create the plant_type table
 CREATE TABLE IF NOT EXISTS plant_types(
-	street VARCHAR(100) NOT NULL,
-    city VARCHAR(45) NOT NULL,
-    state VARCHAR(21) NOT NULL,
-    zip BIGINT UNSIGNED NOT NULL,
+    home_ID INT NOT NULL,
 	plant_type varchar(100) NOT NULL,
-	FOREIGN KEY (state, zip, city, street) REFERENCES homes(state, zip, city, street)
+    FOREIGN KEY (home_ID) REFERENCES homes(home_ID)
 );
 
 # Create service_professionals table
 CREATE TABLE IF NOT EXISTS service_pros(
     Business_Name VARCHAR(45) NOT NULL,
-    SP_email VARCHAR(100) UNIQUE PRIMARY KEY NOT NULL ,
+    SP_email VARCHAR(100) UNIQUE PRIMARY KEY NOT NULL,
     SP_password VARCHAR(16) NOT NULL,
 	SP_phone BIGINT UNSIGNED,
     SP_creditcard BIGINT UNSIGNED,

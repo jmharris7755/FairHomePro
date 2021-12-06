@@ -65,7 +65,7 @@
           <?php if(isset($_SESSION['loggedIn']) AND isset($_SESSION['ho_email'])): ?>
           <? //Display if user is logged in ?>
 
-          <h2>Welcome <?php echo $_SESSION['ho_email']; ?> </h2>
+          <h2>Welcome <?php echo $_SESSION['ho_username']; ?> </h2>
 
           <p>
             To get started, click on the "Services" button to tell
