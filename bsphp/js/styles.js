@@ -10,6 +10,20 @@ addAHomeBtn.addEventListener('click', function () {
 })
 }
 //Add A Home Modal end
+
+//Modal for add a home pop-up window start
+if (document.getElementById('editAHomeBtn'))
+{
+var editAHomeBtn = document.getElementById('editAHomeBtn');
+var editAHomeModal = new bootstrap.Modal(document.getElementById('editAHomeModal'), {
+    keyboard: false
+})
+editAHomeBtn.addEventListener('click', function () {
+    editAHomeModal.toggle();
+})
+}
+//Add A Home Modal end
+
 //Modal for add a service pop-up window start
 if (document.getElementById('addAServiceBtn'))
 {
@@ -34,3 +48,21 @@ EditServicesBtn.addEventListener('click', function () {
 })
 }
 //Edit A service Modal end
+
+//Function to who hide edit home form
+function SaveStreetCookie() {
+    var edit_home_select = document.getElementById("editHomeSelect");
+    //var edit_home_form = document.getElementById("editHomeForm");
+    var name = "edit_home_select"
+    var edit_home_select_value = "";
+
+    //edit_home_form.style.display = edit_home_select.value == "" ? "none" : "block";
+    edit_home_select_value = edit_home_select.value;
+    
+    document.cookie =  'edit_home_select='+edit_home_select_value+'; max-age=1800';
+
+
+
+    alert(document.cookie);
+
+}

@@ -114,7 +114,7 @@
                     </select required>
                 </div>
                 <div class="mb-3">
-                    <label for="h_sqft class="form-label">Home Sq.Ft.</label>
+                    <label for="h_sqft" class="form-label">Home Sq.Ft.</label>
                     <input type="number" class="form-control" id="h_sqft" name="h_sqft" placeholder="9999"required>
                 </div>
                 <div class="mb-3">
@@ -144,6 +144,71 @@
           </div>
       </div>
     <!----------------A A Home Modal End --------------------------------->
+
+    <!----------------Edit A Home Modal Start --------------------------------->
+        <div class="modal" tabindex="-1" id="editAHomeModal">
+          <div class="modal-dialog">
+          <form method="post" action="#" class="modal-content">
+              <div class="modal-header">
+              <h5 class="modal-title">Edit Home</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+              </div>
+              <div class="modal-body">
+                <div class="mb-3">
+                    <label for="home_select" class="form-label">Select A Home</label><br>
+                    <select id="editHomeSelect" onchange = "SaveStreetCookie(); " required>
+                        <option value="">-- </option>
+                    <?php 
+                     $db_modal = mysqli_connect('localhost', 'root', '', 'fairhomepro');
+                     $ho_email = $_SESSION['ho_email'];
+                     $homes_query = "SELECT home_ID, street FROM homeowners, owns WHERE homeowners.HO_email='$ho_email'
+                     AND homeowners.HO_email = owns.HO_email";
+
+                     $pick_home_query = mysqli_query($db_modal, $homes_query);
+                     while($temp = mysqli_fetch_assoc($pick_home_query))
+                     {    
+                          echo "<option value= \"" . $temp['street'] . "\">" . $temp['street'] . "</option>";
+                     }
+                     ?>
+                    </select required>                        
+                        <?php 
+                            //Get Cookie for option selected in Edit home drop down
+                            $edit_home_select_value = $_COOKIE['edit_home_select'];
+                            //echo $edit_home_select_value;
+                            
+                            if($edit_home_select_value){
+                            //Query to get the home information associated with street name in dropdown
+                            $home_info_query = "SELECT homes.home_ID, homes.street, homes.city, homes.state, homes.zip, constr_type, floors, h_sq_ft, y_sq_ft, plant_type
+                                                FROM owns, homes, plant_types
+                                                WHERE owns.HO_email = '$ho_email' AND owns.home_ID = homes.home_ID 
+                                                AND homes.home_ID = plant_types.home_ID AND homes.street = '$edit_home_select_value'
+                                                AND owns.street = '$edit_home_select_value' AND owns.street = homes.street ";
+
+                            $home_info_data = mysqli_query($db_modal, $home_info_query);
+                            while($c_row = mysqli_fetch_array($home_info_data)){
+                                $this_street = $c_row['street'];
+                                $this_city = $c_row['city'];
+                                $this_state = $c_row['state'];
+                                $this_zip = $c_row['zip'];
+                                $this_constr_type = $c_row['constr_type'];
+                                $this_floors = $c_row['floors'];
+                                $this_h_sq_ft = $c_row['h_sq_ft'];
+                                $this_y_sq_ft = $c_row['y_sq_ft'];
+                                $this_plant_type = $c_row['plant_type'];
+                              }
+                            }
+                         ?>
+
+              <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              <button onclick="window.location.href='edit_home.php'" name="select_homeBtn" type="button" class="btn btn-primary">Submit</button>
+              </div>
+          </form>
+          </div>
+      </div>
+    <!----------------Edit A Home Modal End --------------------------------->
 
 
 

@@ -658,5 +658,70 @@ if (isset($_POST['add_home_modal'])) {
   }
 }
 
+//Query to update customer account info
+if (isset($_POST['edit_homeBtn'])){
+  // receive all input values from the form
+  $street = mysqli_real_escape_string($db, $_POST['street']);
+  $city = mysqli_real_escape_string($db, $_POST['city']);
+  $state = mysqli_real_escape_string($db, $_POST['state']);
+  $zip_code = mysqli_real_escape_string($db, $_POST['zip_code']);
+  $const_type = mysqli_real_escape_string($db, $_POST['const_type']);
+  $floor_type = mysqli_real_escape_string($db, $_POST['floor_type']);
+  $h_sqft = mysqli_real_escape_string($db, $_POST['h_sqft']);
+  $y_sqft = mysqli_real_escape_string($db, $_POST['y_sqft']);
+  $plant_type = mysqli_real_escape_string($db, $_POST['plant_type']);
+
+  // form validation: ensure that the form is correctly filled ...
+  // by adding (array_push()) corresponding error unto $errors array
+  if (empty($street)) { array_push($errors, "Street is required"); }
+  if (empty($city)) { array_push($errors, "City is required"); }
+  if ($state =='NULL') { array_push($errors, "State is required"); }
+  if (empty($zip_code)) { array_push($errors, "Zip code is required"); }
+  if (empty($const_type)) { array_push($errors, "Construction Type is required"); }
+  if (empty($floor_type)) { array_push($errors, "Floor Type is required"); }
+  if (empty($h_sqft)) { array_push($errors, "Home size is required"); }
+  if (empty($y_sqft)) { array_push($errors, "Yard size is required"); }
+  //if (empty($creditcard)) { array_push($errors, "Credit Card is required"); }
+  //if (empty($bankaccount)) { array_push($errors, "Bank Account is required"); }
+    
+  //Get selection cookie
+  $home_select_street = $_COOKIE['edit_home_select'];
+  
+  if(count($errors) == 0){
+
+    $get_homeID_query = "SELECT homes.home_ID 
+                          FROM homes, owns 
+                          WHERE homes.street = '$home_select_street' AND owns.street = '$home_select_street' AND homes.street=owns.street
+                          AND homes.city = owns.city AND homes.state = owns.state AND homes.zip = owns.zip";
+
+    $get_homeID_result = mysqli_query($db, $get_homeID_query);
+    $get_homeID = mysqli_fetch_array($get_homeID_result); 
+
+    $update_home_query = "UPDATE homes SET street='$street', 
+                    city = '$city', state='$state', 
+                    zip='$zip_code', constr_type = '$const_type', floors='$floor_type',
+                    h_sq_ft='$h_sqft', y_sq_ft='$y_sqft'
+                    WHERE home_ID='$get_homeID'";
+
+    $update_owns_query = "UPDATE homes SET street='$street', 
+                          city = '$city', state='$state', 
+                          zip='$zip_code'
+                          WHERE home_ID='$get_homeID'";
+
+    $update_plants_query="UPDATE plant_types SET plant_type = $plant_type WHERE home_ID = $get_homeID";
+
+    mysqli_query($db, $update_home_query);
+    mysqli_query($db, $update_owns_query);
+    mysqli_query($db, $update_plants_query);
+
+  	$_SESSION['street'] = $street;
+    $_SESSION['city'] = $city;
+    $_SESSION['state'] = $state;
+    $_SESSION['zip_code'] = $zip_code;
+  	$_SESSION['success'] = "Home is registered";
+    $_SESSION['loggedIn'] = TRUE;
+  	header('location: customer_account.php');
+  }
+}
   
   ?>

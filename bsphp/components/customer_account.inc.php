@@ -99,7 +99,7 @@
                         >
 						Add a Home
                 </button>
-                <button  onclick= "window.location.href='add_home.php'"
+                <button  id="editAHomeBtn"
 						  type="button" 
 						  class = "btn btn-outline-success"
                           name = "edit_home"
