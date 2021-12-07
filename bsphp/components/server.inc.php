@@ -307,6 +307,43 @@ if (isset($_POST['customer_account'])) {
   
 }
 
+//Get Contract Information
+function sp_create_contract_table(){
+    $sp_email = $_SESSION['sp_email'];
+    $db = mysqli_connect('localhost', 'root', '', 'fairhomepro');
+
+    $services_query = "SELECT * 
+                       FROM Contract 
+                       WHERE SP_email = '$sp_email'";
+
+    $services_query_results = mysqli_query($db, $services_query);
+
+    
+    if (mysqli_num_rows($services_query_results)){
+        $field = mysqli_fetch_fields($services_query_results);
+        $fields = array();
+        $j=0;
+        $service_num=1;
+    foreach($field as $col){
+      echo "<th>".$col->name."</th>";
+      array_push($fields, array(++$j, $col->name));
+    }
+    echo "</tr>";
+
+    while($sp_row = $services_query_results->fetch_array()){
+      echo "<tr>";
+      for($i=0 ; $i < sizeof($fields) ; $i++){
+        $fieldname = $fields[$i][1];
+        $fieldvalue = $sp_row[$fieldname];
+        
+        echo "<td><input type='text' value='" . $fieldvalue . "'readonly ></td>";
+      }
+      $service_num++;
+      echo "</tr>";
+    }
+    }
+    }
+
 //Get Service information
 function sp_create_services_table(){
     $sp_email = $_SESSION['sp_email'];
@@ -565,15 +602,27 @@ if (isset($_POST['add_home_modal'])) {
   	$homes_query = "INSERT INTO homes (street, city, state, zip, constr_type, floors, h_sq_ft, y_sq_ft) 
   			  VALUES('$street', '$city', '$state', '$zip_code', '$const_type', '$floor_type', '$h_sqft', '$y_sqft')";
 
+
+
+
     //Also insert into the owns table
-    //Query to insert homeowner email and home info into owns table
+    
     $homes_owns_query = "INSERT INTO owns (HO_email, street, city, state, zip)
           VALUES('$ho_email', '$street', '$city', '$state', '$zip_code')";
+              $HID = $db->insert_id;
+    //Query to insert homeowner email and home info into owns table
 
     $homes_plants_query = "INSERT INTO plant_types (street, city, state, zip, plant_type)
           VALUES('$street', '$city', '$state', '$zip_code', '$plant_type')";
+
+
   	mysqli_query($db, $homes_query);
     mysqli_query($db, $homes_owns_query);
+    $HID_query = "UPDATE owns SET home_ID = '$HID'
+                 WHERE street='$street' AND city='$city' AND state='$state' AND zip='$zip_code' LIMIT 1";
+                 
+
+    mysqli_query($db, $HID_query);
     mysqli_query($db, $homes_plants_query);
 
   	$_SESSION['street'] = $street;

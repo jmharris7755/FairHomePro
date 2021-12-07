@@ -3,75 +3,49 @@
         <div class="row align-items-center justify-content-center">
           <div class="col-md-5">
 
-            <? //Display if user is not logged in ?>
-            <?php if(!isset($_SESSION['loggedIn'])): ?>
-
-            <h2>Get the best price for the services you need</h2>
-
-            <p>
-              To get started, create an account. After collecting 
-              some information, we'll match the services you need
-              with the businesses in your area!
-              Satisfaction gauranteed!
-            </p>
-
-
-            <button onclick="window.location.href='signup.php'"
-                type="button" 
-                class="btn btn-outline-success btn-lg">
-              Sign-Up
-            </button>
-
-            <p>
-
-            </p>
-
-
-            <?php
-            echo nl2br("\n");
-             ?>
-
-
-            <p> 
-            Are you a business owner? Sign up here!
-            </p>
-
-            <button onclick="window.location.href='business_signup.php'"
-                type="button" 
-                class="btn btn-outline-success btn-lg">
-              Sign-Up
-            </button>
-
-            <p>
-                Already a member? Just sign-in!
-            </p>
-
-            <button onclick="window.location.href='signin.php'"
-                type="button" 
-                class="btn btn-outline-warning btn-lg">
-              Sign-In
-            </button>
-
-          </div>
-          <div class="col-md-5">
-            <img
-              src="img/email_campaign_monochromatic.svg"
-              alt="Header image"
-            />
-          </div>
-
-          <?php endif; ?>
-
           <?php if(isset($_SESSION['loggedIn']) AND isset($_SESSION['ho_email'])): ?>
           <? //Display if user is logged in ?>
 
           <h2>Welcome <?php echo $_SESSION['ho_email']; ?> </h2>
 
           <p>
-            To get started, click on the "Services" button to tell
-            us what you're looking for!
+            Please select the service you wish to have done:
           </p>
 
+                <div class="mb-3">
+                    <label for="service_type" class="form-label">Service offered</label><br>
+                    <select name="service_type" required>
+                        <option value="">-- </option>
+                    <?php $db_modal = mysqli_connect('localhost', 'root', '', 'fairhomepro');
+                     $services_query = "SELECT service FROM service_types";
+                     $test_query = mysqli_query($db_modal, $services_query);
+                     while($temp = mysqli_fetch_assoc($test_query))
+                     {    
+                          echo "<option value= \"" . $temp['service'] . "\">" . $temp['service'] . "</option>";
+                     }
+                     ?>
+                    </select required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="service_type" class="form-label">Home to apply service</label><br>
+                    <select name="service_type" required>
+                        <option value="">-- </option>
+                    <?php $home_db = mysqli_connect('localhost', 'root', '', 'fairhomepro');
+                     $home_query = "SELECT homes.street
+                                        FROM homes INNER JOIN owns
+                                        ON 
+                                        WHERE $_SESSION['ho_email'] = owns.HO_email"
+                     $home_test_query = mysqli_query($home_db, $home_query);
+                     while($home_temp = mysqli_fetch_assoc($home_test_query))
+                     {    
+                          echo "<option value= \"" . $home_temp['street'] . "\">" . $home_temp['street'] . "</option>";
+                     }
+                     ?>
+                    </select required>
+                </div>
+
+                
           <button onclick="window.location.href='services.php'"
               type="button" 
               class="btn btn-outline-info btn-lg">

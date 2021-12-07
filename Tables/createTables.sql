@@ -57,7 +57,6 @@ CREATE TABLE IF NOT EXISTS service_pros(
     Business_Name VARCHAR(45) NOT NULL,
     SP_email VARCHAR(100) UNIQUE PRIMARY KEY NOT NULL ,
     SP_password VARCHAR(16) NOT NULL,
-	SP_phone BIGINT UNSIGNED,
     SP_creditcard BIGINT UNSIGNED,
     SP_bankaccount BIGINT UNSIGNED
 );
