@@ -658,7 +658,7 @@ if (isset($_POST['add_home_modal'])) {
   }
 }
 
-//Query to update customer account info
+//Query to update customer home info
 if (isset($_POST['edit_homeBtn'])){
   // receive all input values from the form
   $home_ID = mysqli_real_escape_string($db, $_POST['home_ID']);
@@ -689,25 +689,13 @@ if (isset($_POST['edit_homeBtn'])){
   $home_select_street = $_COOKIE['edit_home_select'];
   
   if(count($errors) == 0){
-
-    /*$get_homeID_query = "SELECT homes.home_ID 
-                          FROM homes, owns 
-                          WHERE homes.street = '$home_select_street' AND owns.street = '$home_select_street' AND homes.street=owns.street
-                          AND homes.city = owns.city AND homes.state = owns.state AND homes.zip = owns.zip";
-
-    $get_homeID_result = mysqli_query($db, $get_homeID_query);
-    $get_homeID = mysqli_fetch_array($get_homeID_result); */
-
+    //Query to update informaion in homes table from edit home page
     $update_home_query = "UPDATE homes SET street='$street', 
                     city = '$city', state='$state', 
                     zip='$zip_code', constr_type = '$const_type', floors='$floor_type',
                     h_sq_ft='$h_sqft', y_sq_ft='$y_sqft'
                     WHERE home_ID='$home_ID' ";
 
-    /*$update_owns_query = "UPDATE owns SET street='$street', 
-                          city = '$city', state='$state', 
-                          zip='$zip_code'
-                          WHERE home_ID='$home_ID'";*/
 
     $update_plants_query="UPDATE plant_types SET plant_type = $plant_type WHERE home_ID = '$home_ID'";
 
@@ -723,6 +711,54 @@ if (isset($_POST['edit_homeBtn'])){
     $_SESSION['loggedIn'] = TRUE;
   	header('location: customer_account.php');
   }
+}
+
+if(isset($POST['payment_confirm'])){
+
+  $ho_email = $_SESSION['ho_email'];
+  $ho_creditcard = mysqli_real_escape_string($db, $_POST['ho_creditcard']);
+  $ho_bankaccount = mysqli_real_escape_string($db, $_POST['ho_bankaccount']);
+
+  if (empty($ho_creditcard && $ho_bankaccount)) { array_push($errors, "Credit Card or Bank Account is required"); }
+
+    //Get max value for contract_ID in contract table
+    $contractID_max_query = "SELECT MAX(home_ID) as m from homes";
+    $contractID_max_result = mysqli_query($db, $contractID_max_query);
+    $contractID_max = mysqli_fetch_array($contractID_max_result);
+
+    //if contract_ID is null set to 1
+    if(!$contractID_max){
+      $contract_ID = 1;
+    }
+    else{
+      //otherwise increment max value by 1
+      $contract_ID = $contractID_max[0] + 1;
+    }
+
+    //Get max value for transaction_ID in homes table
+    $transID_max_query = "SELECT MAX(home_ID) as m from homes";
+    $transID_max_result = mysqli_query($db, $transID_max_query);
+    $transID_max = mysqli_fetch_array($transID_max_result);
+
+    //if home_ID is null set to 1
+    if(!$transID_max){
+      $transaction_ID = 1;
+    }
+    else{
+      //otherwise increment max value by 1
+      $transaction_ID = $transID_max[0] + 1;
+    }
+    //Queries to inser values into contract and transaction tables
+  $contract_insert_query = "INSERT INTO contract (contract_ID, contract_date, service_type, price, SP_email, HO_email)
+                            VALUES('$contract_ID', '$contract_date', '$service_type', '$price', '$sp_email', '$ho_email')";
+
+  $transaction_insert_query = "INSERT INTO transaction (transaction_ID, HO_email, SP_email, service_type, price, contract_ID)
+                               VALUES('$transaction_ID', '$ho_email', '$sp_email', '$service_type', '$price', '$contract_ID')";
+
+  //Run the queries
+  mysqli_query($db, $contract_insert_query);
+  mysqli_query($db, $transaction_insert_query);
+
 }
   
   ?>

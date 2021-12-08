@@ -13,7 +13,7 @@
             <h1>Hello <?php echo $_SESSION['ho_username'];?> </h1>
 
             <p>
-              Adjust your home information in form to the right.
+              Edit your home information in form to the right.
             </p>
             <?php
                     //Connect to DB and query user info
@@ -51,10 +51,10 @@
           <div class = "container pt-3">
             <div class="row align-items-center justify-content-center">
                 <div class="col-auto">
-                <h2>My Home: <?php "echo $edit_home_select_value;" ?></h2>
+                <h2>Edit Home: <?php "echo $edit_home_select_value;" ?></h2>
                     <form  method="post" action="index.php">
             	    <?php include('errors.inc.php'); ?>
-                    <div style="input-group">
+                    <div style="input-group" hidden>
   	                    <label>HomeID:</label>
                         <?php
                           //These cursed lines are to line up the labels using whitespace
@@ -256,7 +256,7 @@
                     <div class="input-group">
                     <?php
                           //These cursed lines are to line up the labels using whitespace
-                          echo str_repeat("&nbsp;", 22);
+                          echo str_repeat("&nbsp;", 48);
                           ?>
   	                 <button type="submit" 
 					   		 class="btn btn-outline-success" 
@@ -265,6 +265,5 @@
                     </form>
                 </div>
             </div>
-          </div>
-          
-    </section>
+          </div>   
+</section>
