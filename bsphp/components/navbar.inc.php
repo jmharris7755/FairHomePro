@@ -29,7 +29,7 @@
               <a class="nav-link" href="services.php">Services</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="gallery.php">Gallery</a>
+              <a class="nav-link" href="contracts.php">Contracts</a>
             </li>
             </li>
             <li class="nav-item">

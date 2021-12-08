@@ -2,11 +2,13 @@
       <div class="container pt-3">
         <div class="row align-items-center justify-content-center">
           <div class="col-md-5">
+             <form method="post" action="service_management.php">        
 
           <?php if(isset($_SESSION['loggedIn']) AND isset($_SESSION['ho_email'])): ?>
           <? //Display if user is logged in ?>
 
           <h2>Welcome <?php echo $_SESSION['ho_email']; ?> </h2>
+
 
           <p>
             Please select the service you wish to have done:
@@ -15,10 +17,16 @@
                 <div class="mb-3">
                     <label for="service_type" class="form-label">Service offered</label><br>
                     <select name="service_type" required>
+                   <?php if(isset($_POST['service_type']))
+                        {
+                          echo "<option value= \"" . $_POST['service_type'] . "\">" . $_POST['service_type'] . "</option>";
+                        } ?>
                         <option value="">-- </option>
-                    <?php $db_modal = mysqli_connect('localhost', 'root', '', 'fairhomepro');
+                        <?php
+                    $db_modal = mysqli_connect('localhost', 'root', '', 'fairhomepro');
                      $services_query = "SELECT service FROM service_types";
                      $test_query = mysqli_query($db_modal, $services_query);
+
                      while($temp = mysqli_fetch_assoc($test_query))
                      {    
                           echo "<option value= \"" . $temp['service'] . "\">" . $temp['service'] . "</option>";
@@ -28,29 +36,113 @@
                 </div>
                 
                 <div class="mb-3">
-                    <label for="service_type" class="form-label">Home to apply service</label><br>
-                    <select name="service_type" required>
-                        <option value="">-- </option>
-                    <?php $home_db = mysqli_connect('localhost', 'root', '', 'fairhomepro');
-                     $home_query = "SELECT homes.street
-                                        FROM homes INNER JOIN owns
-                                        ON 
-                                        WHERE $_SESSION['ho_email'] = owns.HO_email"
-                     $home_test_query = mysqli_query($home_db, $home_query);
+                    <label for="home_ID" class="form-label">Home to apply service</label><br>
+                    <select name="home_ID" required>
+                    <?php
+                        if(isset($_POST['home_ID']))
+                        {
+                          $post_ID = $_POST['home_ID'];
+                          $post_query = "SELECT home_ID, street, city, zip, state FROM homes
+                          WHERE home_ID = '$post_ID'";
+                     $post_test_query = mysqli_query($db_modal, $post_query);
+                        while($home_temp = mysqli_fetch_assoc($post_test_query)){
+                          echo "<option value= \"" . $home_temp['home_ID'] ."\">" . $home_temp['street'] .  " " . $home_temp['city'] . " "  . $home_temp['zip'] . " "  . $home_temp['state'] . "</option>";
+                          }
+                        }
+
+                     $ho_email = $_SESSION['ho_email'];
+                     $home_query = "SELECT homes.street, homes.city, homes.zip, homes.state, homes.home_ID FROM owns INNER JOIN homes ON owns.home_ID = homes.home_ID
+                                    WHERE owns.HO_email = '$ho_email'";
+
+                     $home_test_query = mysqli_query($db_modal, $home_query);
+ 
+                     echo "<option value=\"\"> -- </option>";
                      while($home_temp = mysqli_fetch_assoc($home_test_query))
                      {    
-                          echo "<option value= \"" . $home_temp['street'] . "\">" . $home_temp['street'] . "</option>";
+                          echo "<option value= \"" . $home_temp['home_ID'] ."\">" . $home_temp['street'] .  " " . $home_temp['city'] . " "  . $home_temp['zip'] . " "  . $home_temp['state'] . "</option>";
                      }
-                     ?>
+                    ?>
                     </select required>
                 </div>
-
-                
-          <button onclick="window.location.href='services.php'"
-              type="button" 
-              class="btn btn-outline-info btn-lg">
-            Services
+                       
+          <button 
+                         type="submit" 
+						  class = "btn btn-outline-success"
+                          name = "request_bid" >
+            Request bid
           </button>
+
+          <?php if (isset($_POST['request_bid'])) {  
+          $_SESSION['request_check'] = true;
+          $service_select = mysqli_real_escape_string($db, $_POST['service_type']);
+          $home = mysqli_real_escape_string($db, $_POST['home_ID']);
+
+          $service_query = "SELECT *
+                            FROM services  INNER JOIN (
+                            SELECT MIN(s_price) AS s_price
+                            FROM services
+                            WHERE s_type = '$service_select') tb2
+                            ON services.s_price = tb2.s_price LIMIT 1";
+
+
+          $bid_request_result = mysqli_query($db, $service_query);
+          if(mysqli_num_rows($bid_request_result)) {
+            while($service_row = mysqli_fetch_array($bid_request_result)){
+                 $_SESSION['type_provided'] = $service_row['s_type'];
+                 $_SESSION['price_to_pay'] = $service_row['s_price'];
+                 $_SESSION['pro_email'] = $service_row['SP_email'];
+                 $_SESSION['home_ID_in_use'] = $home;
+                 $type_provided = $_SESSION['type_provided'];
+                 $price_to_pay = $_SESSION['price_to_pay'];
+                echo "<div> Do you want " .  $_SESSION['type_provided'] . " for $" . $_SESSION['price_to_pay'] . " on home ID " . $_SESSION['home_ID_in_use']  .  " </div> ";
+                echo    "<button 
+                         type=\"submit\" 
+						  class = \"btn btn-outline-success\"
+                          name = \"transaction_generator\" >
+                             Yes
+                             </button>";
+
+                echo    "
+                        <button 
+                         type=\"submit\" 
+						  class = \"btn btn-outline-success\"
+                          name = \"cancel\" >
+                             No
+                             </button>";
+
+                             if(isset($_POST['cancel']))
+                             {
+                                  header('Location: '.$_SERVER['PHP_SELF']);
+                                die;
+                             }
+          }
+
+
+/*
+if (isset($_POST['customer_account'])) {
+
+  $account_query = "SELECT * FROM homeowners WHERE HO_email='$ho_email'";
+  $account_results = mysqli_query($db, $account_query);
+
+
+  if (mysqli_num_rows($account_results)) {
+    while($c_row = mysqli_fetch_array($account_results)){
+        $_SESSION['ho_username'] = $c_row['HO_name'];
+        $_SESSION['ho_email'] = $c_row['HO_email'];
+        $_SESSION['ho_phone'] = $c_row['HO_phone'];
+        $_SESSION['ho_creditcard'] = $c_row['HO_creditcard'];
+        $_SESSION['ho_bankaccount'] = $c_row['HO_bankaccount'];
+    }
+  }
+*/
+
+        }
+       }
+        ?>
+
+
+           
+           
 
           <p>
               Link to check existing orders / account
@@ -94,6 +186,7 @@
           />
           </div>
           </div>
+          </form>
           </div>
         </div>
       </div>

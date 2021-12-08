@@ -82,6 +82,7 @@
                 </form>
                 <?php endif; ?>  
             </div>
+            </div>
 
             <div class="d-flex mr-auto p-2 flex-column">
                 <h3> <strong><u>My Homes</u></strong> </h3>
