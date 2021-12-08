@@ -11,6 +11,7 @@ unset($_SESSION["creditcard"]);
 unset($_SESSION["sp_password_1"]);
 unset($_SESSION["username"]);
 unset($_SESSION["sp_phone"]);
+unset($_SESSION["request_bid"]);
 
 session_destroy();
 header("Location:index.php");

@@ -95,10 +95,10 @@
 
         <?php elseif(isset($_SESSION['sp_email']) AND isset($_SESSION['sp_username'])): ?>
         <h2>Welcome <?php echo $_SESSION['sp_username']; ?> </h2>
-          <button onclick="window.location.href='business_services.php'"
+          <button onclick="window.location.href='contracts.php'"
               type="button" 
               class="btn btn-outline-info btn-lg">
-            Services
+            Contracts
           </button>
                     <button onclick="window.location.href='service_pro_settings.php'
                           <?php $_SESSION['sp_info_edit'] = FALSE; ?>

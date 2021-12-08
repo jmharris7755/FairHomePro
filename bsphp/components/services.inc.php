@@ -24,7 +24,9 @@
           <div class="col-md-5"><img src="img/coding_.svg" alt="" /></div>
           <div class="col-md-5"><img src="img/marketing.svg" alt="" /></div>
           <div class="col-md-5">
-            <button type="button " class="btn btn-outline-success mb-3">
+            <button onclick= "window.location.href='service_management.php'"
+            type="button "
+            class="btn btn-outline-success mb-3">
               Select Services
             </button>
 
