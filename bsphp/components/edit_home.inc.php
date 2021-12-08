@@ -26,14 +26,14 @@
                               
                     if($edit_home_select_value){
                     //Query to get the home information associated with street name in dropdown
-                    $home_info_query = "SELECT homes.home_ID, homes.street, homes.city, homes.state, homes.zip, constr_type, floors, h_sq_ft, y_sq_ft, plant_type
+                    $home_info_query = "SELECT homes.home_ID, street, city, state, zip, constr_type, floors, h_sq_ft, y_sq_ft, plant_type
                                         FROM owns, homes, plant_types
                                         WHERE owns.HO_email = '$ho_email' AND owns.home_ID = homes.home_ID 
-                                        AND homes.home_ID = plant_types.home_ID AND homes.street = '$edit_home_select_value'
-                                        AND owns.street = '$edit_home_select_value' AND owns.street = homes.street ";
+                                        AND homes.home_ID = plant_types.home_ID AND homes.street = '$edit_home_select_value'";
   
                     $home_info_data = mysqli_query($db_modal, $home_info_query);
                     while($c_row = mysqli_fetch_array($home_info_data)){
+                        $this_homeID = $c_row['home_ID'];
                         $this_street = $c_row['street'];
                         $this_city = $c_row['city'];
                         $this_state = $c_row['state'];
@@ -54,6 +54,20 @@
                 <h2>My Home: <?php "echo $edit_home_select_value;" ?></h2>
                     <form  method="post" action="index.php">
             	    <?php include('errors.inc.php'); ?>
+                    <div style="input-group">
+  	                    <label>HomeID:</label>
+                        <?php
+                          //These cursed lines are to line up the labels using whitespace
+                          echo str_repeat("&nbsp;", 28);
+                          ?>
+                          <br>
+  	                    <input 
+                            type="text" 
+                            name="home_ID" 
+                            size=30
+                            value="<?php echo $this_homeID;?>"
+                        >
+                    </div>
                     <div style="input-group">
   	                    <label>Street:</label>
                         <?php

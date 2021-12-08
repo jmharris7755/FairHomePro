@@ -202,8 +202,8 @@ if (isset($_POST['reg_home'])) {
 
     //Also insert into the owns table
     //Query to insert homeowner email and home info into owns table
-    $homes_owns_query = "INSERT INTO owns (home_ID, HO_email, street, city, state, zip)
-          VALUES('$home_ID', '$ho_email', '$street', '$city', '$state', '$zip_code')";
+    $homes_owns_query = "INSERT INTO owns (home_ID, HO_email)
+          VALUES('$home_ID', '$ho_email')";
 
     $homes_plants_query = "INSERT INTO plant_types (home_ID, plant_type)
           VALUES('$home_ID', '$plant_type')";
@@ -411,8 +411,8 @@ function account_create_homes_table(){
   $ho_email = $_SESSION['ho_email'];
   $db = mysqli_connect('localhost', 'root', '', 'fairhomepro');
 
-  $account_homes_query = "SELECT home_ID, street, city, state, zip FROM homeowners, owns WHERE homeowners.HO_email='$ho_email'
-                          AND homeowners.HO_email = owns.HO_email";
+  $account_homes_query = "SELECT homes.home_ID, street, city, state, zip FROM homeowners, owns, homes WHERE homeowners.HO_email='$ho_email'
+                          AND homeowners.HO_email = owns.HO_email AND homes.home_ID = owns.home_ID";
 
   $account_homes_results = mysqli_query($db, $account_homes_query);
 
@@ -639,8 +639,8 @@ if (isset($_POST['add_home_modal'])) {
 
     //Also insert into the owns table
     //Query to insert homeowner email and home info into owns table
-    $homes_owns_query = "INSERT INTO owns (home_ID, HO_email, street, city, state, zip)
-          VALUES('$home_ID', '$ho_email', '$street', '$city', '$state', '$zip_code')";
+    $homes_owns_query = "INSERT INTO owns (home_ID, HO_email)
+          VALUES('$home_ID', '$ho_email')";
 
     $homes_plants_query = "INSERT INTO plant_types (home_ID, plant_type)
           VALUES('$home_ID', '$plant_type')";
@@ -661,6 +661,7 @@ if (isset($_POST['add_home_modal'])) {
 //Query to update customer account info
 if (isset($_POST['edit_homeBtn'])){
   // receive all input values from the form
+  $home_ID = mysqli_real_escape_string($db, $_POST['home_ID']);
   $street = mysqli_real_escape_string($db, $_POST['street']);
   $city = mysqli_real_escape_string($db, $_POST['city']);
   $state = mysqli_real_escape_string($db, $_POST['state']);
@@ -689,29 +690,29 @@ if (isset($_POST['edit_homeBtn'])){
   
   if(count($errors) == 0){
 
-    $get_homeID_query = "SELECT homes.home_ID 
+    /*$get_homeID_query = "SELECT homes.home_ID 
                           FROM homes, owns 
                           WHERE homes.street = '$home_select_street' AND owns.street = '$home_select_street' AND homes.street=owns.street
                           AND homes.city = owns.city AND homes.state = owns.state AND homes.zip = owns.zip";
 
     $get_homeID_result = mysqli_query($db, $get_homeID_query);
-    $get_homeID = mysqli_fetch_array($get_homeID_result); 
+    $get_homeID = mysqli_fetch_array($get_homeID_result); */
 
     $update_home_query = "UPDATE homes SET street='$street', 
                     city = '$city', state='$state', 
                     zip='$zip_code', constr_type = '$const_type', floors='$floor_type',
                     h_sq_ft='$h_sqft', y_sq_ft='$y_sqft'
-                    WHERE home_ID='$get_homeID'";
+                    WHERE home_ID='$home_ID' ";
 
-    $update_owns_query = "UPDATE homes SET street='$street', 
+    /*$update_owns_query = "UPDATE owns SET street='$street', 
                           city = '$city', state='$state', 
                           zip='$zip_code'
-                          WHERE home_ID='$get_homeID'";
+                          WHERE home_ID='$home_ID'";*/
 
-    $update_plants_query="UPDATE plant_types SET plant_type = $plant_type WHERE home_ID = $get_homeID";
+    $update_plants_query="UPDATE plant_types SET plant_type = $plant_type WHERE home_ID = '$home_ID'";
 
     mysqli_query($db, $update_home_query);
-    mysqli_query($db, $update_owns_query);
+    //mysqli_query($db, $update_owns_query);
     mysqli_query($db, $update_plants_query);
 
   	$_SESSION['street'] = $street;

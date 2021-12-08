@@ -103,6 +103,7 @@
 						  type="button" 
 						  class = "btn btn-outline-success"
                           name = "edit_home"
+                          onclick="setCookie('edit_home_select','yes','30')"
                           >
 						  Edit Homes
                 </button>

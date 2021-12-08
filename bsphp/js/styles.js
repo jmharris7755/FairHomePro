@@ -1,3 +1,4 @@
+/************************************************* JS MODALS START ************************************************************************** */
 //Modal for add a home pop-up window start
 if (document.getElementById('addAHomeBtn'))
 {
@@ -8,10 +9,11 @@ var addAHomeModal = new bootstrap.Modal(document.getElementById('addAHomeModal')
 addAHomeBtn.addEventListener('click', function () {
     addAHomeModal.toggle();
 })
+
 }
 //Add A Home Modal end
 
-//Modal for add a home pop-up window start
+//Modal for edit a home pop-up window start
 if (document.getElementById('editAHomeBtn'))
 {
 var editAHomeBtn = document.getElementById('editAHomeBtn');
@@ -22,7 +24,7 @@ editAHomeBtn.addEventListener('click', function () {
     editAHomeModal.toggle();
 })
 }
-//Add A Home Modal end
+//Edit A Home Modal end
 
 //Modal for add a service pop-up window start
 if (document.getElementById('addAServiceBtn'))
@@ -48,7 +50,9 @@ EditServicesBtn.addEventListener('click', function () {
 })
 }
 //Edit A service Modal end
+/************************************************* JS MODALS END ************************************************************************** */
 
+/************************************************* JS FUNCTIONS START ************************************************************************** */
 //Function to who hide edit home form
 function SaveStreetCookie() {
     var edit_home_select = document.getElementById("editHomeSelect");
@@ -66,3 +70,13 @@ function SaveStreetCookie() {
     alert(document.cookie);
 
 }
+
+//create cookie generic function --
+//Used in custoemr_account to create the edit_home_select cookie
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + "; " + expires;
+}
+/************************************************* JS FUNCTIONS END ************************************************************************** */

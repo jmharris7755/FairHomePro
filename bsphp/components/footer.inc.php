@@ -143,7 +143,7 @@
           </form>
           </div>
       </div>
-    <!----------------A A Home Modal End --------------------------------->
+    <!----------------Add A Home Modal End --------------------------------->
 
     <!----------------Edit A Home Modal Start --------------------------------->
         <div class="modal" tabindex="-1" id="editAHomeModal">
@@ -158,13 +158,13 @@
               <div class="modal-body">
                 <div class="mb-3">
                     <label for="home_select" class="form-label">Select A Home</label><br>
-                    <select id="editHomeSelect" onchange = "SaveStreetCookie(); " required>
+                    <select id="editHomeSelect" onchange = "SaveStreetCookie()" required>
                         <option value="">-- </option>
                     <?php 
                      $db_modal = mysqli_connect('localhost', 'root', '', 'fairhomepro');
                      $ho_email = $_SESSION['ho_email'];
-                     $homes_query = "SELECT home_ID, street FROM homeowners, owns WHERE homeowners.HO_email='$ho_email'
-                     AND homeowners.HO_email = owns.HO_email";
+                     $homes_query = "SELECT homes.home_ID, street FROM homeowners, owns, homes WHERE homeowners.HO_email='$ho_email'
+                     AND homeowners.HO_email = owns.HO_email AND homes.home_ID = owns.home_ID";
 
                      $pick_home_query = mysqli_query($db_modal, $homes_query);
                      while($temp = mysqli_fetch_assoc($pick_home_query))
@@ -175,16 +175,18 @@
                     </select required>                        
                         <?php 
                             //Get Cookie for option selected in Edit home drop down
+                            if(isset($_COOKIE['edit_home_select'])){
                             $edit_home_select_value = $_COOKIE['edit_home_select'];
                             //echo $edit_home_select_value;
+                            }
                             
                             if($edit_home_select_value){
                             //Query to get the home information associated with street name in dropdown
-                            $home_info_query = "SELECT homes.home_ID, homes.street, homes.city, homes.state, homes.zip, constr_type, floors, h_sq_ft, y_sq_ft, plant_type
+                            $home_info_query = "SELECT homes.home_ID, street, city, state, zip, constr_type, floors, h_sq_ft, y_sq_ft, plant_type
                                                 FROM owns, homes, plant_types
                                                 WHERE owns.HO_email = '$ho_email' AND owns.home_ID = homes.home_ID 
-                                                AND homes.home_ID = plant_types.home_ID AND homes.street = '$edit_home_select_value'
-                                                AND owns.street = '$edit_home_select_value' AND owns.street = homes.street ";
+                                                AND homes.home_ID = plant_types.home_ID 
+                                                AND homes.street = '$edit_home_select_value'";
 
                             $home_info_data = mysqli_query($db_modal, $home_info_query);
                             while($c_row = mysqli_fetch_array($home_info_data)){
@@ -200,7 +202,6 @@
                               }
                             }
                          ?>
-
               <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
               <button onclick="window.location.href='edit_home.php'" name="select_homeBtn" type="button" class="btn btn-primary">Submit</button>
@@ -209,8 +210,6 @@
           </div>
       </div>
     <!----------------Edit A Home Modal End --------------------------------->
-
-
 
     <!----------------Add A Service Modal Start --------------------------------->
       <div class="modal" tabindex="-1" id="addAServiceModal">
