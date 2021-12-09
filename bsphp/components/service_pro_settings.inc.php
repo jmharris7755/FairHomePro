@@ -112,6 +112,33 @@
                 </button>
                 </form> 
             </div>
+
+  <div class="d-flex mr-auto p-2 flex-column">
+                <h3> <strong><u>My Specialties</u></strong> </h3>
+                <form action="service_pro_settings.php" method="POST">
+                <div style="overflow:auto">
+                <table class="table-bordered">
+                    <?php
+                        sp_create_specialties_table();
+                     ?>
+                </table>
+                </div>
+                <button	id="addASpecialtyBtn"  
+                        type="button" 
+						class = "btn btn-outline-success"
+                        >
+						Add a specialty
+                </button>
+                <button  id="EditSpecialtiesBtn"
+						  type="button" 
+						  class = "btn btn-outline-success"
+                          name = "edit_specialties"
+                          >
+						  Remove Specialties
+                </button>
+                </form> 
+            </div>
+
         </div>
     </div>
 </header>

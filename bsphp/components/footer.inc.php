@@ -224,6 +224,99 @@
       </div>
     <!----------------A Service Modal End --------------------------------->
 
+
+
+
+
+    <!----------------Add A specialty Modal Start --------------------------------->
+      <div class="modal" tabindex="-1" id="addASpecialtyModal">
+          <div class="modal-dialog">
+          <form method="post" action="#" class="modal-content">
+              <div class="modal-header">
+              <h5 class="modal-title">Add A Specialty</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+              </div>
+              <div class="modal-body">
+                <div class="mb-3">
+                    <label for="specialty_type" class="form-label">Specialty offered</label><br>
+                    <select name="specialty_type" required>
+                        <option value="">-- </option>
+                    <?php $db_modal = mysqli_connect('localhost', 'root', '', 'fairhomepro');
+                     $specialties_query = "SELECT service_ID, service FROM service_types";
+                     $test_query = mysqli_query($db_modal, $specialties_query);
+                     while($temp = mysqli_fetch_assoc($test_query))
+                     {    
+                          echo "<option value= \"" . $temp['service_ID'] . "\">" . $temp['service'] . "</option>";
+                     }
+                     ?>
+                    </select required>
+                </div>
+            </div>
+              <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              <button name="add_specialty_modal" type="submit" class="btn btn-primary">Add specialty</button>
+              </div>
+          </form>
+          </div>
+      </div>
+    <!----------------A Specialty Modal End --------------------------------->
+
+
+
+
+
+
+
+
+    <!----------------Edit A specialty Modal Start --------------------------------->
+      <div class="modal" tabindex="-1" id="editASpecialtyModal">
+          <div class="modal-dialog">
+          <form method="post" action="#" class="modal-content">
+              <div class="modal-header">
+              <h5 class="modal-title">Edit A Specialty</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+              </div>
+              <div class="modal-body">
+                <div class="mb-3">
+                    <label for="specialty_type" class="form-label">Specialty offered</label><br>
+                    <select name="specialty_type" required>
+                        <option value="">-- </option>
+                    <?php 
+                    $sp_email = $_SESSION['sp_email'];
+                    $db_modal = mysqli_connect('localhost', 'root', '', 'fairhomepro');
+                     $specialties_query = "SELECT specialties.service_ID, service FROM service_types INNER JOIN specialties 
+                                            ON specialties.service_ID = service_types.service_ID
+                                            WHERE specialties.SP_email = '$sp_email'";
+                     $test_query = mysqli_query($db_modal, $specialties_query);
+                     while($temp = mysqli_fetch_assoc($test_query))
+                     {    
+                          echo "<option value= \"" . $temp['service_ID'] . "\">" . $temp['service'] . "</option>";
+                     }
+                     ?>
+                    </select required>
+                </div>
+            </div>
+              <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              <button name="remove_specialty_modal" type="submit" class="btn btn-primary">Remove Specialty</button>
+              </div>
+          </form>
+          </div>
+      </div>
+    <!----------------Edit A Specialty Modal End --------------------------------->
+
+
+
+
+
+
+
+
+
     <!----------------Test --------------------------------->
 
                         <?php 

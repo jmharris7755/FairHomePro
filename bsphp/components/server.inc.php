@@ -41,7 +41,7 @@ $user_check_query = "SELECT HO_email
                         WHERE SP_email = '$sp_email' ";
 
                           $result = mysqli_query($db, $user_check_query);
-  $user = mysqli_fetch_assoc($result);
+                         $user = mysqli_fetch_assoc($result);
   
   if ($user) { // if user exists
 
@@ -67,6 +67,48 @@ $user_check_query = "SELECT HO_email
     $_SESSION['loggedIn'] = TRUE;
   	header('location: index.php');
   }
+}
+
+if (isset ($_POST['file_complaint'])){
+
+$complaint_text = $_POST['complaints_text'];
+
+
+$contract_ID = $_POST['contract_complaint'];
+   $complaint_date = date("Y/m/d");
+
+    $complaintID_max_query = "SELECT MAX(complaint_ID) as m from complaints";
+    $complaintID_max_result = mysqli_query($db, $complaintID_max_query);
+    $complaintID_max = mysqli_fetch_array($complaintID_max_result);
+
+        if(!$complaintID_max){
+      $complaint_ID = 1;
+    }
+    else{
+      //otherwise increment max value by 1
+      $complaint_ID = $complaintID_max[0] + 1;
+    }
+
+
+$party_involvement_query = "SELECT *
+                            FROM Contract
+                            WHERE contract_ID = '$contract_ID'";
+
+$party_involvement_results = mysqli_query($db, $party_involvement_query);
+if(mysqli_num_rows($party_involvement_results)){
+    while($comp_row = mysqli_fetch_array($party_involvement_results))
+        {
+            $contract_date = $comp_row['contract_date'];
+            $ho_email = $comp_row['HO_email'];
+            $sp_email = $comp_row['SP_email'];
+        }
+
+}
+
+
+    $query = "INSERT INTO complaints (complaint_ID, complaint_text, contract_date, complaint_date, contract_ID, HO_email, SP_email)
+              VALUES('$complaint_ID', '$complaint_text', '$contract_date', '$complaint_date', '$contract_ID', '$ho_email', '$sp_email')";
+    mysqli_query($db, $query);
 }
 
 // REGISTER USER
@@ -136,6 +178,71 @@ if (isset($_POST['reg_user'])) {
   }
 }
 
+//Generate Contract
+if (isset($_POST['make_payment'])){
+    $type = $_SESSION['type_provided'];
+    $pricing = $_SESSION['price_to_pay'];
+    $HID = $_SESSION['home_ID_in_use'];
+    $pro_email = $_SESSION['pro_email'];
+    $ho_email = $_SESSION['ho_email'];
+
+    $contractID_max_query = "SELECT MAX(contract_ID) as m from contract";
+    $contractID_max_result = mysqli_query($db, $contractID_max_query);
+    $contractID_max = mysqli_fetch_array($contractID_max_result);
+
+        if(!$contractID_max){
+      $contract_ID = 1;
+    }
+    else{
+      //otherwise increment max value by 1
+      $contract_ID = $contractID_max[0] + 1;
+    }
+
+    $transactionID_max_query = "SELECT MAX(transaction_ID) as m from transaction";
+    $transactionID_max_result = mysqli_query($db, $transactionID_max_query);
+    $transactionID_max = mysqli_fetch_array($transactionID_max_result);
+
+        if(!$transactionID_max){
+      $transaction_ID = 1;
+    }
+    else{
+      //otherwise increment max value by 1
+      $transaction_ID = $transactionID_max[0] + 1;
+    }
+
+    $date = date("Y/m/d");
+
+    $contract_query = "INSERT INTO contract (contract_date, contract_ID, HO_email, price, service_type, SP_email)
+                       VALUES('$date','$contract_ID', '$ho_email', '$pricing', '$type', '$pro_email' )";
+
+    mysqli_query($db, $contract_query);
+
+    $transaction_query = "INSERT INTO transaction (transaction_date, contract_ID, HO_email, price, service_type, SP_email, transaction_ID)
+                       VALUES('$date','$contract_ID', '$ho_email', '$pricing', '$type', '$pro_email', $transaction_ID )";
+
+    mysqli_query($db, $transaction_query);
+    
+    header('location: contracts.php');
+
+    /*
+      	$homes_query = "INSERT INTO homes (home_ID, street, city, state, zip, constr_type, floors, h_sq_ft, y_sq_ft) 
+  			  VALUES('$home_ID','$street', '$city', '$state', '$zip_code', '$const_type', '$floor_type', '$h_sqft', '$y_sqft')";
+
+    //Also insert into the owns table
+    //Query to insert homeowner email and home info into owns table
+    $homes_owns_query = "INSERT INTO owns (HO_email, home_ID)
+          VALUES('$ho_email', '$home_ID')";
+
+    $homes_plants_query = "INSERT INTO plant_types (street, city, state, zip, plant_type)
+          VALUES('$street', '$city', '$state', '$zip_code', '$plant_type')";
+  	mysqli_query($db, $homes_query);
+    mysqli_query($db, $homes_owns_query);
+    mysqli_query($db, $homes_plants_query);
+    */
+    
+
+}
+
 // Add Home to Homes table after registering and fililng out home form
 if (isset($_POST['reg_home'])) {
   // receive all input values from the form
@@ -183,10 +290,13 @@ if (isset($_POST['reg_home'])) {
     //use to add info to owns table
     $ho_email = $_SESSION['ho_email'];
 
+
     //Get max value of home_ID in homes table
+
     $homeID_max_query = "SELECT MAX(home_ID) as m from homes";
     $homeID_max_result = mysqli_query($db, $homeID_max_query);
     $homeID_max = mysqli_fetch_array($homeID_max_result);
+
 
     //if homeID is empty (i.e. homes table is empty) set home_ID to 1
     if(!$homeID_max){
@@ -215,6 +325,7 @@ if (isset($_POST['reg_home'])) {
 
     $homes_plants_query = "INSERT INTO has_plant (home_ID, plant_ID)
           VALUES('$home_ID', '$plant_ID')";
+
 
     mysqli_query($db, $homes_query);
     mysqli_query($db, $homes_owns_query);
@@ -261,8 +372,8 @@ if (isset($_POST['login_user'])) {
           }
           $_SESSION['success'] = "You are now logged in";
           $_SESSION['loggedIn'] = TRUE;
-          header('location: index.php');
-        }
+          $_SESSION['ho_email'] = $ho_email;
+          header('location: index.php');        }
         else if($sp_rows){
             //If logging in as a normal user fails attempt to login as a service pro/business
                     if($sp_rows) {
@@ -330,8 +441,126 @@ if (isset($_POST['customer_account'])) {
   else {
       array_push($errors, "Error going to account page");
   }
-  
-}
+  }
+
+  if(isset($_POST['transaction_generator']))
+  {
+  	header('location: transaction.php');
+  }
+
+if (isset($_POST['request_bid'])) {          
+          $service_select = mysqli_real_escape_string($db, $_POST['service_type']);
+          $home = mysqli_real_escape_string($db, $_POST['home_ID']);
+
+          $service_query = "SELECT *
+                            FROM services INNER JOIN (
+                            SELECT MIN(s_price) AS s_price
+                            FROM services
+                            WHERE s_type = '$service_select') tb2
+                            ON services.s_price = tb2.s_price";
+
+
+          $bid_request_result = mysqli_query($db, $service_query);
+          if(mysqli_num_rows($bid_request_result)) {
+            while($service_row = mysqli_fetch_array($bid_request_result)){
+                $s_type = $service_row['s_type'];
+          }
+        }
+
+
+                echo $s_type;
+
+         }
+          
+
+//Get Contract Information
+function create_contracts_table(){
+    $db = mysqli_connect('localhost', 'root', '', 'fairhomepro');
+
+    if(isset($_SESSION['ho_email']))
+    {
+    $ho_email = $_SESSION['ho_email'];
+    $services_query = "SELECT * 
+                       FROM contract 
+                       WHERE HO_email = '$ho_email'";
+                       }
+    
+    elseif(isset($_SESSION['sp_email']))
+    {
+    $sp_email = $_SESSION['sp_email'];
+    $services_query = "SELECT * 
+                       FROM contract 
+                       WHERE SP_email = '$sp_email'";
+                       }
+
+
+    $services_query_results = mysqli_query($db, $services_query);
+
+    
+    if (mysqli_num_rows($services_query_results)){
+        $field = mysqli_fetch_fields($services_query_results);
+        $fields = array();
+        $j=0;
+        $service_num=1;
+    foreach($field as $col){
+      echo "<th>".$col->name."</th>";
+      array_push($fields, array(++$j, $col->name));
+    }
+    echo "</tr>";
+
+    while($sp_row = $services_query_results->fetch_array()){
+      echo "<tr>";
+      for($i=0 ; $i < sizeof($fields) ; $i++){
+        $fieldname = $fields[$i][1];
+        $fieldvalue = $sp_row[$fieldname];
+        
+        echo "<td><input type='text' value='" . $fieldvalue . "'readonly ></td>";
+      }
+      $service_num++;
+      echo "</tr>";
+    }
+    }
+    }
+
+
+
+    
+//Get specialty information
+function sp_create_specialties_table(){
+    $sp_email = $_SESSION['sp_email'];
+    $db = mysqli_connect('localhost', 'root', '', 'fairhomepro');
+
+    $specialties_query = "SELECT service
+                        FROM service_types INNER JOIN specialties ON service_types.service_ID = specialties.service_ID
+                        WHERE specialties.SP_email = '$sp_email' ";
+    $specialties_query_results = mysqli_query($db, $specialties_query);
+
+    
+    if (mysqli_num_rows($specialties_query_results)){
+        $field = mysqli_fetch_fields($specialties_query_results);
+        $fields = array();
+        $j=0;
+        $service_num=1;
+    foreach($field as $col){
+      echo "<th>".$col->name."</th>";
+      array_push($fields, array(++$j, $col->name));
+    }
+    echo "</tr>";
+
+    while($sp_row = $specialties_query_results->fetch_array()){
+      echo "<tr>";
+      for($i=0 ; $i < sizeof($fields) ; $i++){
+        $fieldname = $fields[$i][1];
+        $fieldvalue = $sp_row[$fieldname];
+        
+        echo "<td><input type='text' value='" . $fieldvalue . "'readonly ></td>";
+      }
+      $service_num++;
+      echo "</tr>";
+    }
+    }
+    }
+
 
 //Query to update service provider account info
 if (isset($_POST['update_sp_info'])){
@@ -379,6 +608,50 @@ if (isset($_POST['update_sp_info'])){
     }
   }
 }
+
+
+//Get Homes information
+function account_create_homes_table(){
+  $ho_email = $_SESSION['ho_email'];
+  $db = mysqli_connect('localhost', 'root', '', 'fairhomepro');
+
+  $account_homes_query = "SELECT homes.street, homes.city, homes.state, homes.zip 
+                            FROM homes INNER JOIN owns  ON homes.home_ID = owns.home_ID
+                          WHERE owns.HO_email='$ho_email'";
+
+
+  $account_homes_results = mysqli_query($db, $account_homes_query);
+
+  if (mysqli_num_rows($account_homes_results)){
+
+    $field = $account_homes_results->fetch_fields();
+    $fields = array();
+    $j=0;
+    $home_num=1;
+
+
+    echo "<th>Home</th>";
+    foreach($field as $col){
+      echo "<th>".$col->name."</th>";
+      array_push($fields, array(++$j, $col->name));
+    }
+    echo "</tr>";
+
+    while($c_row = $account_homes_results->fetch_array()){
+      echo "<tr>";
+      echo "<td>$home_num</td>";
+      for($i=0 ; $i < sizeof($fields) ; $i++){
+        $fieldname = $fields[$i][1];
+        $fieldvalue = $c_row[$fieldname];
+        
+        echo "<td><input type='text' value='" . $fieldvalue . "'readonly ></td>";
+      }
+      $home_num++;
+      echo "</tr>";
+    }
+  }
+}
+
 
 //Query to update customer account info
 if (isset($_POST['update_c_info'])){
@@ -434,6 +707,58 @@ if (isset($_POST['edit_service_modal'])){
                          SET s_price ='$price'
                          WHERE SP_email='$sp_email' AND s_type = '$service_type'";
         $query_results = mysqli_query($db, $update_query);
+}
+
+
+if(isset($_POST['remove_specialty_modal'])){
+    $sp_email = $_SESSION['sp_email'];
+    $service_ID = mysqli_real_escape_string($db, $_POST['specialty_type']);
+
+    $delete_specialty = "DELETE FROM specialties
+                         WHERE Service_ID = '$service_ID' AND SP_email = '$sp_email'";
+    mysqli_query($db, $delete_specialty);
+}
+
+
+
+
+
+if (isset($_POST['add_specialty_modal'])){
+    $service_ID = mysqli_real_escape_string($db, $_POST['specialty_type']);
+    $sp_email = $_SESSION['sp_email'];
+    $specialtyID_max_query = "SELECT MAX(specialty_ID) as m from specialties";
+    $specialtyID_max_result = mysqli_query($db, $specialtyID_max_query);
+    $specialtyID_max = mysqli_fetch_array($specialtyID_max_result);
+
+    if(!$specialtyID_max){
+        $specialty_ID = 1;
+    }
+    else{
+        $specialty_ID = $specialtyID_max[0] + 1;
+    }
+
+
+    $copy_check_query = "SELECT SP_email, service_ID
+                    FROM specialties
+                    WHERE SP_email = '$sp_email' AND service_ID = $service_ID";
+    $copy_check_result = mysqli_query($db, $copy_check_query);
+    $copy = mysqli_fetch_assoc($copy_check_result);
+
+    if($copy)
+    {
+        if($copy['SP_email'] === $sp_email AND $copy['service_ID'] === $service_ID)
+    {
+      array_push($errors, "We are already specialized in that.");
+     }
+    }
+
+    if(count($errors) == 0)
+    {
+    $specialty_insert = "INSERT INTO specialties (service_ID, specialty_ID, SP_email)
+                        VALUES('$service_ID', '$specialty_ID', '$sp_email')";
+    mysqli_query($db, $specialty_insert);
+    }
+
 }
     
 // Add Services to services table
@@ -514,10 +839,13 @@ if (isset($_POST['add_home_modal'])) {
     //use to add info to owns table
     $ho_email = $_SESSION['ho_email'];
 
+
     //Get max value of home_ID in homes table
+
     $homeID_max_query = "SELECT MAX(home_ID) as m from homes";
     $homeID_max_result = mysqli_query($db, $homeID_max_query);
     $homeID_max = mysqli_fetch_array($homeID_max_result);
+
 
     //if homeID is empty (i.e. homes table is empty) set home_ID to 1
     if(!$homeID_max){
@@ -540,7 +868,11 @@ if (isset($_POST['add_home_modal'])) {
   			  VALUES('$home_ID', '$street', '$city', '$state', '$zip_code', '$const_type', '$floor_type', '$h_sqft', '$y_sqft')";
 
     //Also insert into the owns table
+    
+    $homes_owns_query = "INSERT INTO owns (home_ID, HO_email)
+          VALUES('$home_ID','$ho_email')";
     //Query to insert homeowner email and home info into owns table
+
     $homes_owns_query = "INSERT INTO owns (home_ID, HO_email)
           VALUES('$home_ID', '$ho_email')";
 
@@ -548,6 +880,7 @@ if (isset($_POST['add_home_modal'])) {
           VALUES('$home_ID', '$plant_ID')";
 
     mysqli_query($db, $homes_query);
+
     mysqli_query($db, $homes_owns_query);
     mysqli_query($db, $homes_plants_query);
 

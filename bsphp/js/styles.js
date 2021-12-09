@@ -64,8 +64,36 @@ EditServicesBtn.addEventListener('click', function () {
 })
 }
 //Edit A service Modal end
+
 /************************************************* JS MODALS END ************************************************************************** */
 
 /************************************************* JS FUNCTIONS START ************************************************************************** */
 
 /************************************************* JS FUNCTIONS END ************************************************************************** */
+
+
+//Add A specialty Modal start
+if (document.getElementById('addASpecialtyBtn'))
+{
+var addASpecialtyBtn = document.getElementById('addASpecialtyBtn');
+var addASpecialtyModal = new bootstrap.Modal(document.getElementById('addASpecialtyModal'), {
+    keyboard: false
+})
+addASpecialtyBtn.addEventListener('click', function () {
+    addASpecialtyModal.toggle();
+})
+}
+//Add A specialty Modal end
+
+//Edit A specialty Modal start
+if (document.getElementById('EditSpecialtiesBtn'))
+{
+var EditSpecialtiesBtn = document.getElementById('EditSpecialtiesBtn');
+var editASpecialtyModal = new bootstrap.Modal(document.getElementById('editASpecialtyModal'), {
+    keyboard: false
+})
+EditSpecialtiesBtn.addEventListener('click', function () {
+    editASpecialtyModal.toggle();
+})
+}
+
