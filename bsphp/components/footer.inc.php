@@ -114,7 +114,7 @@
                     </select required>
                 </div>
                 <div class="mb-3">
-                    <label for="h_sqft class="form-label">Home Sq.Ft.</label>
+                    <label for="h_sqft" class="form-label">Home Sq.Ft.</label>
                     <input type="number" class="form-control" id="h_sqft" name="h_sqft" placeholder="9999"required>
                 </div>
                 <div class="mb-3">
@@ -124,15 +124,15 @@
                 <div class="mb-3">
                     <label for="plant_type" class="form-label">Plant Type</label><br>
                     <select name="plant_type">
-                    <option value=NULL>-- </option>
-                        <option value="Begonias"> Begonias </option>
-                        <option value="Fuchsia"> Fuchsia </option>
-                        <option value="Geraniums"> Geraniums</option>
-                        <option value="Abutilon"> Abutilon </option>
-                        <option value="Caladium"> Caladium </option>
-                        <option value="Herbs"> Herbs </option>
-                        <option value="Herbs"> Rose Bushes </option>
-                        <option value="Boxwood and Myrtle"> Boxwood and Myrtle </option>
+                    <option value="">-- </option>
+                            <?php $db_modal = mysqli_connect('localhost', 'root', '', 'fairhomepro');
+                                $plants_query = "SELECT plant_type FROM plant_types";
+                                $test_query = mysqli_query($db_modal, $plants_query);
+                                while($temp = mysqli_fetch_assoc($test_query))
+                                {    
+                                      echo "<option value= \"" . $temp['plant_type'] . "\">" . $temp['plant_type'] . "</option>";
+                                }
+                            ?>
                     </select required>
                 </div>
             </div>
@@ -143,9 +143,47 @@
           </form>
           </div>
       </div>
-    <!----------------A A Home Modal End --------------------------------->
+    <!----------------Add A Home Modal End --------------------------------->
 
+    <!----------------Edit A Home Modal Start --------------------------------->
+        <div class="modal" tabindex="-1" id="editAHomeModal">
+          <div class="modal-dialog">
+          <form method="post" action="#" class="modal-content">
+              <div class="modal-header">
+              <h5 class="modal-title">Edit Home</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+              </div>
+              <div class="modal-body">
+                <div class="mb-3">
+                    <label for="home_select" class="form-label">Select A Home</label><br>
+                    <select id="editHomeSelect" name ="street"required>
+                        <option value="">-- </option>
+                    <?php 
+                     $db_modal = mysqli_connect('localhost', 'root', '', 'fairhomepro');
+                     $ho_email = $_SESSION['ho_email'];
+                     $homes_query = "SELECT homes.home_ID, street FROM homeowners, owns, homes WHERE homeowners.HO_email='$ho_email'
+                     AND homeowners.HO_email = owns.HO_email AND homes.home_ID = owns.home_ID";
 
+                     $pick_home_query = mysqli_query($db_modal, $homes_query);
+                     
+                     while($temp = mysqli_fetch_assoc($pick_home_query))
+                     {    
+                        
+                          echo "<option value= \"" . $temp['street'] . "\">" . $temp['street'] . "</option>";
+                     }
+                     ?>
+                    </select required> 
+                </div>                       
+              <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              <button name="select_homeBtn" type="submit" class="btn btn-primary">Submit</button>
+              </div>
+          </form>
+          </div>
+      </div>
+    <!----------------Edit A Home Modal End --------------------------------->
 
     <!----------------Add A Service Modal Start --------------------------------->
       <div class="modal" tabindex="-1" id="addAServiceModal">
@@ -344,7 +382,6 @@
           </div>
       </div>
     <!----------------Edit a Service Modal End --------------------------------->
-
 
       <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script> 
     <script src="js/bootstrap.min.js"></script>

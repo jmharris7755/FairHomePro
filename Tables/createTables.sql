@@ -21,7 +21,7 @@ VALUES ("Lawn Mowing", "1"), ("Window Cleaning", "2"), ("Hedge Trimming", "3"), 
 
 # Create the homes table
 CREATE TABLE IF NOT EXISTS homes(
-	home_ID int,
+    home_ID INT PRIMARY KEY UNIQUE NOT NULL,
     street VARCHAR(100) NOT NULL,
     city VARCHAR(45) NOT NULL,
     state VARCHAR(21) NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS homes(
     floors VARCHAR(45) NOT NULL,
     h_sq_ft BIGINT UNSIGNED NOT NULL,
     y_sq_ft BIGINT UNSIGNED NOT NULL,
-	PRIMARY KEY (home_ID)
+
 );
 
 # Step 1. Create all tables first
@@ -73,11 +73,23 @@ CREATE TABLE IF NOT EXISTS owns(
     FOREIGN KEY (HO_email) REFERENCES homeowners(HO_email)
 );
 
-# Create the plant_type table
+# Create the plant_types table
 CREATE TABLE IF NOT EXISTS plant_types(
+
+    plant_ID INT PRIMARY KEY AUTO_INCREMENT,
+	plant_type varchar(100) NOT NULL
+);
+
+INSERT INTO plant_types(plant_type)
+VALUES ("Begonias"), ("Fuchsia"), ("Geraniums"), ("Abutilon"), ("Caladium"), ("Rose Bushes"), ("Boxwood and Myrtle");
+
+# Create the has_plant table
+CREATE TABLE IF NOT EXISTS has_plant(
     home_ID INT NOT NULL,
-	plant_type varchar(100) NOT NULL,
-    FOREIGN KEY (home_ID) REFERENCES homes(home_ID)
+	plant_ID INT NOT NULL,
+    FOREIGN KEY (home_ID) REFERENCES homes(home_ID),
+    FOREIGN KEY (plant_ID) REFERENCES plant_types(plant_ID)
+
 );
 
 # Create service_professionals table

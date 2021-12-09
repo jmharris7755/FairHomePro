@@ -168,7 +168,10 @@ if (isset($_POST['reg_user'])) {
   	mysqli_query($db, $homeowner_query);
     //mysqli_query($db, $owner_owns_query);
   	$_SESSION['ho_email'] = $ho_email;
-    $_SESSION['c_name'] = $ho_username;
+    $_SESSION['ho_username'] = $ho_username;
+    $_SESSION['ho_phone'] = $ho_phonenumber;
+    $_SESSION['ho_creditcard'] = $ho_creditcard;
+    $_SESSION['ho_bankaccount'] = $ho_bankaccount;
   	$_SESSION['success'] = "You are now logged in";
     $_SESSION['loggedIn'] = TRUE;
   	header('location: add_home.php');
@@ -263,6 +266,7 @@ if (isset($_POST['reg_home'])) {
   if (empty($floor_type)) { array_push($errors, "Floor Type is required"); }
   if (empty($h_sqft)) { array_push($errors, "Home size is required"); }
   if (empty($y_sqft)) { array_push($errors, "Yard size is required"); }
+  if (empty($plant_type)) { array_push($errors, "Plant Type is required"); }
   //if (empty($creditcard)) { array_push($errors, "Credit Card is required"); }
   //if (empty($bankaccount)) { array_push($errors, "Bank Account is required"); }
 
@@ -286,30 +290,44 @@ if (isset($_POST['reg_home'])) {
     //use to add info to owns table
     $ho_email = $_SESSION['ho_email'];
 
+
+    //Get max value of home_ID in homes table
+
     $homeID_max_query = "SELECT MAX(home_ID) as m from homes";
     $homeID_max_result = mysqli_query($db, $homeID_max_query);
     $homeID_max = mysqli_fetch_array($homeID_max_result);
 
-        if(!$homeID_max){
+
+    //if homeID is empty (i.e. homes table is empty) set home_ID to 1
+    if(!$homeID_max){
       $home_ID = 1;
     }
     else{
-      //otherwise increment max value by 1
+      //Otherwise increment max value by 1
       $home_ID = $homeID_max[0] + 1;
     }
 
+    //Query to get plant_ID to insert into the has_plant table
+    $plant_ID_query = "SELECT plant_ID FROM plant_types WHERE plant_type = '$plant_type'";
+    $plant_ID_result = mysqli_query($db, $plant_ID_query);
+    $plant_ID_arr = mysqli_fetch_array($plant_ID_result);
+
+    $plant_ID = $plant_ID_arr[0];
+
     //Query to inset home info into homes table for the homeowner
   	$homes_query = "INSERT INTO homes (home_ID, street, city, state, zip, constr_type, floors, h_sq_ft, y_sq_ft) 
-  			  VALUES('$home_ID','$street', '$city', '$state', '$zip_code', '$const_type', '$floor_type', '$h_sqft', '$y_sqft')";
+  			  VALUES('$home_ID', '$street', '$city', '$state', '$zip_code', '$const_type', '$floor_type', '$h_sqft', '$y_sqft')";
 
     //Also insert into the owns table
     //Query to insert homeowner email and home info into owns table
-    $homes_owns_query = "INSERT INTO owns (HO_email, home_ID)
-          VALUES('$ho_email', '$home_ID')";
+    $homes_owns_query = "INSERT INTO owns (home_ID, HO_email)
+          VALUES('$home_ID', '$ho_email')";
 
-    $homes_plants_query = "INSERT INTO plant_types (street, city, state, zip, plant_type)
-          VALUES('$street', '$city', '$state', '$zip_code', '$plant_type')";
-  	mysqli_query($db, $homes_query);
+    $homes_plants_query = "INSERT INTO has_plant (home_ID, plant_ID)
+          VALUES('$home_ID', '$plant_ID')";
+
+
+    mysqli_query($db, $homes_query);
     mysqli_query($db, $homes_owns_query);
     mysqli_query($db, $homes_plants_query);
 
@@ -406,7 +424,7 @@ if (isset($_POST['sp_account'])) {
 
 //Get Account info when Account button is pushed
 if (isset($_POST['customer_account'])) {
-
+  $ho_email = $SESSION['HO_email'];
   $account_query = "SELECT * FROM homeowners WHERE HO_email='$ho_email'";
   $account_results = mysqli_query($db, $account_query);
 
@@ -544,40 +562,6 @@ function sp_create_specialties_table(){
     }
 
 
-//Get Service information
-function sp_create_services_table(){
-    $sp_email = $_SESSION['sp_email'];
-    $db = mysqli_connect('localhost', 'root', '', 'fairhomepro');
-
-    $services_query = "SELECT s_type, s_price FROM services WHERE SP_email = '$sp_email'";
-    $services_query_results = mysqli_query($db, $services_query);
-
-    
-    if (mysqli_num_rows($services_query_results)){
-        $field = mysqli_fetch_fields($services_query_results);
-        $fields = array();
-        $j=0;
-        $service_num=1;
-    foreach($field as $col){
-      echo "<th>".$col->name."</th>";
-      array_push($fields, array(++$j, $col->name));
-    }
-    echo "</tr>";
-
-    while($sp_row = $services_query_results->fetch_array()){
-      echo "<tr>";
-      for($i=0 ; $i < sizeof($fields) ; $i++){
-        $fieldname = $fields[$i][1];
-        $fieldvalue = $sp_row[$fieldname];
-        
-        echo "<td><input type='text' value='" . $fieldvalue . "'readonly ></td>";
-      }
-      $service_num++;
-      echo "</tr>";
-    }
-    }
-    }
-
 //Query to update service provider account info
 if (isset($_POST['update_sp_info'])){
   $sp_username = mysqli_real_escape_string($db, $_POST['sp_username']);
@@ -625,6 +609,7 @@ if (isset($_POST['update_sp_info'])){
   }
 }
 
+
 //Get Homes information
 function account_create_homes_table(){
   $ho_email = $_SESSION['ho_email'];
@@ -666,6 +651,7 @@ function account_create_homes_table(){
     }
   }
 }
+
 
 //Query to update customer account info
 if (isset($_POST['update_c_info'])){
@@ -823,12 +809,13 @@ if (isset($_POST['add_home_modal'])) {
   // by adding (array_push()) corresponding error unto $errors array
   if (empty($street)) { array_push($errors, "Street is required"); }
   if (empty($city)) { array_push($errors, "City is required"); }
-  if ($state =='NULL') { array_push($errors, "State is required"); }
+  if (empty($state)) { array_push($errors, "State is required"); }
   if (empty($zip_code)) { array_push($errors, "Zip code is required"); }
   if (empty($const_type)) { array_push($errors, "Construction Type is required"); }
   if (empty($floor_type)) { array_push($errors, "Floor Type is required"); }
   if (empty($h_sqft)) { array_push($errors, "Home size is required"); }
   if (empty($y_sqft)) { array_push($errors, "Yard size is required"); }
+  if (empty($plant_type)) { array_push($errors, "Plant Type is required"); }
   //if (empty($creditcard)) { array_push($errors, "Credit Card is required"); }
   //if (empty($bankaccount)) { array_push($errors, "Bank Account is required"); }
 
@@ -852,24 +839,33 @@ if (isset($_POST['add_home_modal'])) {
     //use to add info to owns table
     $ho_email = $_SESSION['ho_email'];
 
+
+    //Get max value of home_ID in homes table
+
     $homeID_max_query = "SELECT MAX(home_ID) as m from homes";
     $homeID_max_result = mysqli_query($db, $homeID_max_query);
     $homeID_max = mysqli_fetch_array($homeID_max_result);
 
-        if(!$homeID_max){
+
+    //if homeID is empty (i.e. homes table is empty) set home_ID to 1
+    if(!$homeID_max){
       $home_ID = 1;
     }
     else{
-      //otherwise increment max value by 1
+      //Otherwise increment max value by 1
       $home_ID = $homeID_max[0] + 1;
     }
+
+    //Query to get plant_ID to insert into the has_plant table
+    $plant_ID_query = "SELECT plant_ID FROM plant_types WHERE plant_type = '$plant_type'";
+    $plant_ID_result = mysqli_query($db, $plant_ID_query);
+    $plant_ID_arr = mysqli_fetch_array($plant_ID_result);
+
+    $plant_ID = $plant_ID_arr[0];
 
     //Query to inset home info into homes table for the homeowner
   	$homes_query = "INSERT INTO homes (home_ID, street, city, state, zip, constr_type, floors, h_sq_ft, y_sq_ft) 
   			  VALUES('$home_ID', '$street', '$city', '$state', '$zip_code', '$const_type', '$floor_type', '$h_sqft', '$y_sqft')";
-
-
-
 
     //Also insert into the owns table
     
@@ -877,11 +873,14 @@ if (isset($_POST['add_home_modal'])) {
           VALUES('$home_ID','$ho_email')";
     //Query to insert homeowner email and home info into owns table
 
-    $homes_plants_query = "INSERT INTO plant_types (street, city, state, zip, plant_type)
-          VALUES('$street', '$city', '$state', '$zip_code', '$plant_type')";
+    $homes_owns_query = "INSERT INTO owns (home_ID, HO_email)
+          VALUES('$home_ID', '$ho_email')";
 
+    $homes_plants_query = "INSERT INTO has_plant (home_ID, plant_ID)
+          VALUES('$home_ID', '$plant_ID')";
 
-  	mysqli_query($db, $homes_query);
+    mysqli_query($db, $homes_query);
+
     mysqli_query($db, $homes_owns_query);
     mysqli_query($db, $homes_plants_query);
 
@@ -895,5 +894,451 @@ if (isset($_POST['add_home_modal'])) {
   }
 }
 
+//Query to update customer home info
+if (isset($_POST['edit_homeBtn'])){
+  // receive all input values from the form
+  $home_ID = mysqli_real_escape_string($db, $_POST['home_ID']);
+  $street = mysqli_real_escape_string($db, $_POST['street']);
+  $city = mysqli_real_escape_string($db, $_POST['city']);
+  $state = mysqli_real_escape_string($db, $_POST['state']);
+  $zip_code = mysqli_real_escape_string($db, $_POST['zip_code']);
+  $const_type = mysqli_real_escape_string($db, $_POST['const_type']);
+  $floor_type = mysqli_real_escape_string($db, $_POST['floor_type']);
+  $h_sqft = mysqli_real_escape_string($db, $_POST['h_sqft']);
+  $y_sqft = mysqli_real_escape_string($db, $_POST['y_sqft']);
+  $plant_type = mysqli_real_escape_string($db, $_POST['plant_type']);
+
+  // form validation: ensure that the form is correctly filled ...
+  // by adding (array_push()) corresponding error unto $errors array
+  if (empty($street)) { array_push($errors, "Street is required"); }
+  if (empty($city)) { array_push($errors, "City is required"); }
+  if ($state =='NULL') { array_push($errors, "State is required"); }
+  if (empty($zip_code)) { array_push($errors, "Zip code is required"); }
+  if (empty($const_type)) { array_push($errors, "Construction Type is required"); }
+  if (empty($floor_type)) { array_push($errors, "Floor Type is required"); }
+  if (empty($h_sqft)) { array_push($errors, "Home size is required"); }
+  if (empty($y_sqft)) { array_push($errors, "Yard size is required"); }
+  //if (empty($creditcard)) { array_push($errors, "Credit Card is required"); }
+  //if (empty($bankaccount)) { array_push($errors, "Bank Account is required"); }
+
+  
+  if(count($errors) == 0){
+    //Query to update informaion in homes table from edit home page
+    $update_home_query = "UPDATE homes SET street='$street', 
+                    city = '$city', state='$state', 
+                    zip='$zip_code', constr_type = '$const_type', floors='$floor_type',
+                    h_sq_ft='$h_sqft', y_sq_ft='$y_sqft'
+                    WHERE home_ID='$home_ID' ";
+
+
+    $update_plants_query="UPDATE plant_types SET plant_type = $plant_type WHERE home_ID = '$home_ID'";
+
+    mysqli_query($db, $update_home_query);
+    //mysqli_query($db, $update_owns_query);
+    mysqli_query($db, $update_plants_query);
+
+  	$_SESSION['street'] = $street;
+    $_SESSION['city'] = $city;
+    $_SESSION['state'] = $state;
+    $_SESSION['zip_code'] = $zip_code;
+  	$_SESSION['success'] = "Home is registered";
+    $_SESSION['loggedIn'] = TRUE;
+  	header('location: customer_account.php');
+  }
+}
+
+if(isset($POST['payment_confirm'])){
+
+  $ho_email = $_SESSION['ho_email'];
+  $ho_creditcard = mysqli_real_escape_string($db, $_POST['ho_creditcard']);
+  $ho_bankaccount = mysqli_real_escape_string($db, $_POST['ho_bankaccount']);
+
+  if (empty($ho_creditcard && $ho_bankaccount)) { array_push($errors, "Credit Card or Bank Account is required"); }
+
+    //Get max value for contract_ID in contract table
+    $contractID_max_query = "SELECT MAX(home_ID) as m from homes";
+    $contractID_max_result = mysqli_query($db, $contractID_max_query);
+    $contractID_max = mysqli_fetch_array($contractID_max_result);
+
+    //if contract_ID is null set to 1
+    if(!$contractID_max){
+      $contract_ID = 1;
+    }
+    else{
+      //otherwise increment max value by 1
+      $contract_ID = $contractID_max[0] + 1;
+    }
+
+    //Get max value for transaction_ID in homes table
+    $transID_max_query = "SELECT MAX(home_ID) as m from homes";
+    $transID_max_result = mysqli_query($db, $transID_max_query);
+    $transID_max = mysqli_fetch_array($transID_max_result);
+
+    //if home_ID is null set to 1
+    if(!$transID_max){
+      $transaction_ID = 1;
+    }
+    else{
+      //otherwise increment max value by 1
+      $transaction_ID = $transID_max[0] + 1;
+    }
+    //Queries to inser values into contract and transaction tables
+  $contract_insert_query = "INSERT INTO contract (contract_ID, contract_date, service_type, price, SP_email, HO_email)
+                            VALUES('$contract_ID', '$contract_date', '$service_type', '$price', '$sp_email', '$ho_email')";
+
+  $transaction_insert_query = "INSERT INTO transaction (transaction_ID, HO_email, SP_email, service_type, price, contract_ID)
+                               VALUES('$transaction_ID', '$ho_email', '$sp_email', '$service_type', '$price', '$contract_ID')";
+
+  //Run the queries
+  mysqli_query($db, $contract_insert_query);
+  mysqli_query($db, $transaction_insert_query);
+
+}
+
+if(isset($_POST['select_homeBtn'])){
+  $ho_email = $_SESSION['ho_email'];
+  $street = mysqli_real_escape_string($db, $_POST['street']);
+
+  if (empty($street)) { array_push($errors, "Street is required"); }
+
+  $home_info_query = "SELECT homes.home_ID, street, city, state, zip, constr_type, floors, h_sq_ft, y_sq_ft
+                      FROM owns, homes
+                      WHERE owns.HO_email = '$ho_email' AND owns.home_ID = homes.home_ID 
+                      AND homes.street = '$street'";
+
+  $home_info_data = mysqli_query($db, $home_info_query);
+
+  while($c_row = mysqli_fetch_array($home_info_data)){
+        $_SESSION['select_home_ID'] = $c_row['home_ID'];
+        $_SESSION['select_street'] = $c_row['street'];
+        $_SESSION['select_city'] = $c_row['city'];
+        $_SESSION['select_state'] = $c_row['state'];
+        $_SESSION['select_zip'] = $c_row['zip'];
+        $_SESSION['select_constr_type'] = $c_row['constr_type'];
+        $_SESSION['select_floors'] = $c_row['floors'];
+        $_SESSION['select_h_sqft'] = $c_row['h_sq_ft'];
+        $_SESSION['select_y_sqft'] = $c_row['y_sq_ft'];
+  }
+    header('location: edit_home.php');
+ 
+}
+
+if(isset($_POST['addAPlantBtn'])){
+  $ho_email = $_SESSION['ho_email'];
+
+  $home_ID = mysqli_real_escape_string($db, $_POST['home_ID']);
+  $plant_type = mysqli_real_escape_string($db, $_POST['plant_type']);
+
+  if (empty($home_ID)) { array_push($errors, "Home # is required"); }
+  if (empty($plant_type)) { array_push($errors, "plant_type is required"); }
+
+  //Query to get plant_ID from the plant_types table
+  $plant_ID_query = "SELECT plant_ID FROM plant_types WHERE plant_type = '$plant_type'";
+  $plant_ID_result = mysqli_query($db, $plant_ID_query);
+  $plant_ID_arr = mysqli_fetch_array($plant_ID_result);
+  $plant_ID = $plant_ID_arr[0];
+
+  //Check if homeowner already has the plant type
+  $owns_plant_ID_query = "SELECT home_ID, plant_ID FROM has_plant WHERE home_ID = '$home_ID' AND plant_ID = '$plant_ID'";
+  $owns_plant_ID_result = mysqli_query($db, $owns_plant_ID_query);
+  $owns_plant_ID_array = mysqli_fetch_array($owns_plant_ID_result);
+  
+
+  if($plant_ID_arr)
+  {
+    if ($owns_plant_ID_array['home_ID'] === $home_ID && $owns_plant_ID_array['plant_ID'] === $plant_ID)
+    {
+      array_push($errors, "Service already exists");
+     }
+  }
+   if (count($errors) == 0)
+   {
+      $has_plants_query = "INSERT INTO has_plant (home_ID, plant_ID)
+      VALUES('$home_ID', '$plant_ID')";
+
+      mysqli_query($db, $has_plants_query);
+   }
+
+}
+
+/******************************************************FUNCTIONS**************************************************************************************** 
+ *                                                                                                                                                     *
+ *                                        This Section contains PHP Functions                                                                          *
+ *                                                                                                                                                     *
+*********************************************************************************************************************************************************/
+//Get Homes information Function
+function account_create_homes_table(){
+  $ho_email = $_SESSION['ho_email'];
+  $db = mysqli_connect('localhost', 'root', '', 'fairhomepro');
+
+  $account_homes_query = "SELECT homes.home_ID, street, city, state, zip FROM homeowners, owns, homes WHERE homeowners.HO_email='$ho_email'
+                          AND homeowners.HO_email = owns.HO_email AND homes.home_ID = owns.home_ID";
+
+  $account_homes_results = mysqli_query($db, $account_homes_query);
+
+  if (mysqli_num_rows($account_homes_results)){
+
+    $field = $account_homes_results->fetch_fields();
+    $fields = array();
+    $j=0;
+    $home_num=1;
+    $column_name = '';
+
+
+    //echo "<th>Home</th>";
+    foreach($field as $col){
+      //Switch case for adjusting Table Column Names
+      switch($col->name){
+        case 'home_ID':
+          $column_name = 'Home';
+          break;
+
+        case 'street':
+          $column_name = 'Street';
+          break;
+
+        case 'city':
+          $column_name = 'City';
+          break;
+
+        case 'state':
+          $column_name = 'State';
+          break;
+
+        case 'zip':
+          $column_name = 'Zip';
+          break;
+
+        case 'constr_type':
+          $column_name = 'Contruction Type';
+          break;
+
+        case 'floors':
+          $column_name = 'Floors';
+          break;
+
+        case 'h_sq_ft':
+          $column_name = 'Home Sq.Ft.';
+          break;
+
+        case 'y_sq_ft':
+          $column_name = 'Yard Sq.Ft.';
+          break;
+
+      }
+      echo "<th style='text-align: center'>".$column_name."</th>";
+      array_push($fields, array(++$j, $col->name));
+    }
+    echo "</tr>";
+
+    while($c_row = $account_homes_results->fetch_array()){
+      echo "<tr>";
+      echo "<td>$home_num</td>";
+      for($i=1 ; $i < sizeof($fields) ; $i++){
+        $fieldname = $fields[$i][1];
+        $fieldvalue = $c_row[$fieldname];
+        
+        echo "<td><input type='text' value='" . $fieldvalue . "'readonly ></td>";
+      }
+      $home_num++;
+      echo "</tr>";
+    }
+  }
+}
+
+//Get Service information
+function sp_create_services_table(){
+  $sp_email = $_SESSION['sp_email'];
+  $db = mysqli_connect('localhost', 'root', '', 'fairhomepro');
+
+  $services_query = "SELECT s_type, s_price FROM services WHERE SP_email = '$sp_email'";
+  $services_query_results = mysqli_query($db, $services_query);
+
+  
+  if (mysqli_num_rows($services_query_results)){
+      $field = mysqli_fetch_fields($services_query_results);
+      $fields = array();
+      $j=0;
+      $service_num=1;
+        foreach($field as $col){
+          echo "<th>".$col->name."</th>";
+          array_push($fields, array(++$j, $col->name));
+        }
+        echo "</tr>";
+
+        while($sp_row = $services_query_results->fetch_array()){
+          echo "<tr>";
+          for($i=0 ; $i < sizeof($fields) ; $i++){
+            $fieldname = $fields[$i][1];
+            $fieldvalue = $sp_row[$fieldname];
+            
+            echo "<td><input type='text' value='" . $fieldvalue . "'readonly ></td>";
+          }
+          $service_num++;
+          echo "</tr>";
+        }
+  }
+}
+
+//Function to create the Plants Table
+//GetPlant_types information
+function account_create_plants_table(){
+  $ho_email = $_SESSION['ho_email'];
+  $db = mysqli_connect('localhost', 'root', '', 'fairhomepro');
+
+  $account_homes_query = "SELECT has_plant.home_ID, plant_type FROM owns, homes, has_plant, plant_types 
+                          WHERE owns.HO_email='$ho_email'
+                          AND homes.home_ID = owns.home_ID AND homes.home_ID = has_plant.home_ID AND plant_types.plant_ID = has_plant.plant_ID
+                          AND owns.home_ID = has_plant.home_ID
+                          ORDER BY has_plant.home_ID ASC";
+
+  $account_homes_results = mysqli_query($db, $account_homes_query);
+
+  if (mysqli_num_rows($account_homes_results)){
+
+    $field = $account_homes_results->fetch_fields();
+    $fields = array();
+    $home_info_arr = array();
+    $j=0;
+    $home_num=1;
+    $column_name = '';
+
+
+    foreach($field as $col){
+      //Switch case for adjusting Table Column Names
+      switch($col->name){
+        case 'home_ID':
+          $column_name = 'Home';
+          break;
+
+        case 'plant_type':
+          $column_name = 'Plant';
+          break;
+
+      }
+      echo "<th style='text-align: center'>".$column_name."</th>";
+      array_push($fields, array(++$j, $col->name));
+    }
+    echo "</tr>";
+
+    while($c_row = $account_homes_results->fetch_array()){
+      echo "<tr>";
+      for($i=0 ; $i < sizeof($fields) ; $i++){
+        $fieldname = $fields[$i][1];
+        $fieldvalue = $c_row[$fieldname];
+        
+        if($fieldname == "home_ID"){
+          if(count($home_info_arr) == 0){
+            echo "<td>$home_num</td>";
+            //store home ID value in array
+            $home_info_arr[$i] = $fieldvalue;
+          }
+          elseif(in_array($fieldvalue, $home_info_arr, true)){
+            --$home_num;
+            echo "<td> $home_num</td>";
+          }
+          else{
+            echo "<td>$home_num</td>";
+          }
+        }
+        else{
+          echo "<td><input type='text' value='" . $fieldvalue . "'readonly ></td>";
+        }
+      }
+      $home_num++;
+      echo "</tr>";
+    }
+  }
+}
+
+//Function to create a combined view of homes and plant_types
+function create_HomesPlants_Table(){
+  $ho_email = $_SESSION['ho_email'];
+  $db = mysqli_connect('localhost', 'root', '', 'fairhomepro');
+
+  $plant_homes_query = "SELECT homes.home_ID, street, city, state, zip, plant_type FROM homeowners, owns, homes, has_plant, plant_types 
+                        WHERE homeowners.HO_email='$ho_email'
+                        AND homeowners.HO_email = owns.HO_email AND homes.home_ID = owns.home_ID AND homes.home_ID=has_plant.home_ID
+                        AND has_plant.plant_ID = plant_types.plant_ID ORDER BY homes.home_ID ASC";
+
+  $plant_homes_results = mysqli_query($db, $plant_homes_query);
+
+  if (mysqli_num_rows($plant_homes_results)){
+
+    $field = $plant_homes_results->fetch_fields();
+    $fields = array();
+    $home_info_arr = array();
+    $j=0;
+    $home_num=1;
+    $column_name = '';
+
+
+    //echo "<th>Home</th>";
+    foreach($field as $col){
+      //Switch case for adjusting Table Column Names
+      switch($col->name){
+        case 'home_ID':
+          $column_name = 'Home';
+          break;
+
+        case 'street':
+          $column_name = 'Street';
+          break;
+
+        case 'city':
+          $column_name = 'City';
+          break;
+
+        case 'state':
+          $column_name = 'State';
+          break;
+
+        case 'zip':
+          $column_name = 'Zip';
+          break;
+
+        case 'plant_type':
+          $column_name = 'Plants';
+          break;
+
+
+      }
+      echo "<th style='text-align: center'>".$column_name."</th>";
+      array_push($fields, array(++$j, $col->name));
+    }
+
+    echo "</tr>";
+
+    while($c_row = $plant_homes_results->fetch_array()){
+      echo "<tr>";
+      for($i=0 ; $i < sizeof($fields) ; $i++){
+        $fieldname = $fields[$i][1];
+        $fieldvalue = $c_row[$fieldname];
+
+        if($fieldname == 'home_ID'){
+
+          if(count($home_info_arr) == 0){
+            echo "<td>$home_num</td>";
+            //store home ID value in array
+            $home_info_arr[$i] = $fieldvalue;
+          }
+          elseif(in_array($fieldvalue, $home_info_arr, true)){
+            --$home_num;
+            echo "<td> $home_num</td>";
+          }
+          else{
+            echo "<td>$home_num</td>";
+          }
+        }
+        
+        else{
+        echo "<td> $fieldvalue </td>";
+        }
+      }
+      $home_num++;
+      echo "</tr>";
+    }
+  }
+}
   
   ?>

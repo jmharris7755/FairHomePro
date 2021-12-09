@@ -10,19 +10,44 @@
         <div class="d-flex flex-row">
           <div class="col-lg-5"><img src="img/logo_solitary.png" alt="" />
 
-            <h1>Welcome to FairHomePro</h1>
+            <h1>Hello <?php echo $_SESSION['ho_username'];?> </h1>
 
             <p>
-              To start, we just need to get a little more information from you.
-              Start by adding in your home information in the section below!
+              Edit your home information in form to the right.
             </p>
+            <?php
+                //Get information from edit home select query
+                $this_homeID = $_SESSION['select_home_ID'];
+                $this_street = $_SESSION['select_street'];
+                $this_city = $_SESSION['select_city'];
+                $this_state = $_SESSION['select_state'];
+                $this_zip = $_SESSION['select_zip'];
+                $this_constr_type = $_SESSION['select_constr_type'];
+                $this_floors = $_SESSION['select_floors'];
+                $this_h_sq_ft = $_SESSION['select_h_sqft'];
+                $this_y_sq_ft = $_SESSION['select_y_sqft'];
+            ?>
           </div>
           <div class = "container pt-3">
             <div class="row align-items-center justify-content-center">
                 <div class="col-auto">
-                <h2>My Home:</h2>
-                    <form  method="post" action="add_home.php">
+                <h2>Edit Selected Home:</h2>
+                    <form  method="post" action="index.php">
             	    <?php include('errors.inc.php'); ?>
+                    <div style="input-group" hidden>
+  	                    <label>HomeID:</label>
+                        <?php
+                          //These cursed lines are to line up the labels using whitespace
+                          echo str_repeat("&nbsp;", 28);
+                          ?>
+                          <br>
+  	                    <input 
+                            type="text" 
+                            name="home_ID" 
+                            size=30
+                            value="<?php echo $this_homeID;?>"
+                        >
+                    </div>
                     <div style="input-group">
   	                    <label>Street:</label>
                         <?php
@@ -34,6 +59,7 @@
                             type="text" 
                             name="street" 
                             size=30
+                            value="<?php echo $this_street;?>"
                         >
                     </div>
                     <div style="input-group">
@@ -46,6 +72,7 @@
   	                    <input 
                             type="text" 
                             name="city" 
+                            value="<?php echo $this_city;?>"
                         >
                     </div>
                     <div style="input-group">
@@ -56,7 +83,7 @@
                           ?>
                           <br>
   	                    <select name="state">
-                              <option value=NULL>-- </option>
+                              <option value="<?php echo $this_state;?>"><?php echo $this_state;?></option>
                               <option value="AK">AK </option>
                               <option value="AZ">AZ </option>
                               <option value="AR">AR </option>
@@ -119,7 +146,8 @@
                           <br>
   	                    <input 
                             type="number" 
-                            name="zip_code" 
+                            name="zip_code"
+                            value="<?php echo $this_zip;?>" 
                         >
                     </div>
                     <div style="input-group">
@@ -130,7 +158,7 @@
                           ?>
                           <br>
   	                    <select name="const_type">
-                          <option value=NULL>-- </option>
+                          <option value="<?php echo $this_constr_type;?>"><?php echo $this_constr_type;?></option>
                           <option value="Wood Frame"> Wood Frame </option>
                           <option value="Timber Frame"> Timber Frame </option>
                           <option value="55+"> 55+ </option>
@@ -150,7 +178,7 @@
                           ?>
                           <br>
   	                    <select name="floor_type">
-                          <option value=NULL>-- </option>
+                          <option value="<?php echo $this_floors;?>"><?php echo $this_floors;?> </option>
                           <option value="Ceramic"> Ceramic </option>
                           <option value="Hardwood"> Hardwood </option>
                           <option value="Laminate"> Laminate</option>
@@ -168,7 +196,8 @@
                           <br>
   	                    <input 
                             type="number" 
-                            name="h_sqft" 
+                            name="h_sqft"
+                            value="<?php echo $this_h_sq_ft;?>" 
                         >
                     </div>
                     <div style="input-group">
@@ -180,41 +209,22 @@
                           <br>
   	                    <input 
                             type="number" 
-                            name="y_sqft" 
+                            name="y_sqft"
+                            value="<?php echo $this_y_sq_ft;?>" 
                         >
-                    </div>
-                    <div style="input-group">
-  	                    <label>Plant Type:</label>
-                        <?php
-                          //These cursed lines are to line up the labels using whitespace
-                          echo str_repeat("&nbsp;", 28);
-                          ?>
-                          <br>
-  	                    <select name="plant_type">
-                          <option value="">-- </option>
-                            <?php $db_modal = mysqli_connect('localhost', 'root', '', 'fairhomepro');
-                                $plants_query = "SELECT plant_type FROM plant_types";
-                                $test_query = mysqli_query($db_modal, $plants_query);
-                                while($temp = mysqli_fetch_assoc($test_query))
-                                {    
-                                      echo "<option value= \"" . $temp['plant_type'] . "\">" . $temp['plant_type'] . "</option>";
-                                }
-                            ?>
-                        </select required>
                     </div>
                     </p>
                     <div class="input-group">
                     <?php
                           //These cursed lines are to line up the labels using whitespace
-                          echo str_repeat("&nbsp;", 22);
+                          echo str_repeat("&nbsp;", 48);
                           ?>
   	                 <button type="submit" 
 					   		 class="btn btn-outline-success" 
-							 name="reg_home">Add Home</button>
+							 name="edit_homeBtn">Submit</button>
   	                </div>
                     </form>
                 </div>
             </div>
-          </div>
-          
-    </section>
+          </div>   
+</section>
