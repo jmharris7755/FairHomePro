@@ -41,6 +41,16 @@ CREATE TABLE IF NOT EXISTS owns(
 
 # Create the plant_type table
 CREATE TABLE IF NOT EXISTS plant_types(
+
+    plant_ID INT PRIMARY KEY AUTO_INCREMENT,
+	plant_type varchar(100) NOT NULL
+);
+
+INSERT INTO plant_types(plant_type)
+VALUES ("Begonias"), ("Fuchsia"), ("Geraniums"), ("Abutilon"), ("Caladium"), ("Rose Bushes"), ("Boxwood and Myrtle");
+
+# Create the has_plant table
+CREATE TABLE IF NOT EXISTS has_plant(
     home_ID INT NOT NULL,
 	plant_type varchar(100) NOT NULL,
     FOREIGN KEY (home_ID) REFERENCES homes(home_ID)
