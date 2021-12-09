@@ -11,7 +11,7 @@
           <div class="col-md-5">
 						  <button onclick="window.location.href='service_pro_settings.php'"
 						  type="button" 
-						  class = "btn btn-outline-danger">
+						  class = "btn btn-outline-success">
 						  Account Settings</button>
 
             <h1>Testing different link</h1>
@@ -25,7 +25,7 @@
           <div class="col-md-5"><img src="img/coding_.svg" alt="" /></div>
           <div class="col-md-5"><img src="img/marketing.svg" alt="" /></div>
           <div class="col-md-5">
-            <button type="button " class="btn btn-outline-warning mb-3">
+            <button type="button " class="btn btn-outline-success mb-3">
               Marketing
             </button>
 

@@ -73,6 +73,8 @@
                               Add A Plant
                       </button>
                       <button onclick="window.location.href='customer_account.php'" 
+                                      <?php $_SESSION['c_info_edit'] = FALSE; ?>
+                                     <?php $_SESSION['c_home_edit'] = FALSE; ?>"
                               name="myAccount"  
                               type="button" 
                               class = "btn btn-outline-warning"
