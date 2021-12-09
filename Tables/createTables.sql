@@ -21,40 +21,6 @@ VALUES ("Lawn Mowing", "1"), ("Window Cleaning", "2"), ("Hedge Trimming", "3"), 
 
 # Create the homes table
 CREATE TABLE IF NOT EXISTS homes(
-	home_ID int,
-    street VARCHAR(100) NOT NULL,
-    city VARCHAR(45) NOT NULL,
-    state VARCHAR(21) NOT NULL,
-    zip BIGINT UNSIGNED NOT NULL,
-    constr_type VARCHAR(45) NOT NULL,
-    floors VARCHAR(45) NOT NULL,
-    h_sq_ft BIGINT UNSIGNED NOT NULL,
-    y_sq_ft BIGINT UNSIGNED NOT NULL,
-	PRIMARY KEY (home_ID)
-);
-
-# Step 1. Create all tables first
-# Create homeowners table
-CREATE TABLE IF NOT EXISTS homeowners(
-    HO_name VARCHAR(45) NOT NULL,
-    HO_email VARCHAR(100) PRIMARY KEY UNIQUE NOT NULL,
-    password VARCHAR(16) NOT NULL,
-    HO_phone INT NOT NULL,
-    HO_creditcard BIGINT UNSIGNED,
-    HO_bankaccount BIGINT UNSIGNED
-);
-
-#Create service_types table
-CREATE TABLE IF NOT EXISTS service_types(
-	service_ID int,
-    service VARCHAR(45) NOT NULL,
-	primary key (service_ID)
-);
-
-
-
-# Create the homes table
-CREATE TABLE IF NOT EXISTS homes(
     home_ID INT PRIMARY KEY UNIQUE NOT NULL,
     street VARCHAR(100) NOT NULL,
     city VARCHAR(45) NOT NULL,
