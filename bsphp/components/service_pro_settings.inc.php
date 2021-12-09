@@ -113,7 +113,7 @@
                 </form> 
             </div>
 
-  <div class="d-flex mr-auto p-2 flex-column">
+             <div class="d-flex mr-auto p-2 flex-column">
                 <h3> <strong><u>My Specialties</u></strong> </h3>
                 <form action="service_pro_settings.php" method="POST">
                 <div style="overflow:auto">
@@ -137,6 +137,29 @@
 						  Remove Specialties
                 </button>
                 </form> 
+            </div>
+            <div class="d-flex mr-auto p-2 flex-column">
+                <h3> <strong><u>My Contracts</u></strong> </h3>
+                <form action="contracts.php" method="POST">
+                <div style="overflow:auto">
+                <table class="table-bordered">
+                    <?php
+                        create_contracts_table();
+                     ?>
+                </table>
+                </div>
+                <div>
+                <button  onclick= "window.location.href='complaints.php'"
+						  type="button" 
+						  class = "btn btn-outline-success"
+                          name = "file_complaint"
+                          >
+						  File complaint
+                </button>
+                </form> 
+                </div>
+            </div>
+            </form> 
             </div>
 
         </div>

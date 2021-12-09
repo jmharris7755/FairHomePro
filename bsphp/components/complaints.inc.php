@@ -35,7 +35,7 @@
 							               name="file_complaint">File complaint</button>
                                            <?php echo str_repeat("&nbsp;", 5); ?>
                     <button onclick="window.location.href='index.php'"
-					   		             class="btn btn-outline-success" 
+					   		             class="btn btn-outline-warning" 
 							               name="home_button">Home</button>
   	                </div>
              </form>

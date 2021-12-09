@@ -7,7 +7,8 @@
           <?php if(isset($_SESSION['loggedIn']) AND isset($_SESSION['ho_email'])): ?>
           <? //Display if user is logged in ?>
 
-          <h2>Welcome <?php echo $_SESSION['ho_email']; ?> </h2>
+          <h2>Welcome To Services</h2>
+          <h2><?php echo $_SESSION['ho_username']; ?> </h2>
 
 
           <p>
@@ -139,14 +140,14 @@ if (isset($_POST['customer_account'])) {
         }
        }
         ?>
+        </p>
 
 
            
            
 
           <p>
-              Link to check existing orders / account
-              Not yet working
+              Or, go to your acount here
           </p>
 
           <button onclick="window.location.href='customer_account.php'
@@ -181,7 +182,7 @@ if (isset($_POST['customer_account'])) {
           <div class="col-md-5">
           
           <img
-            src="img/email_campaign_monochromatic.svg"
+            src="img/house-svgrepo-com.svg"
             alt="Header image"
           />
           </div>

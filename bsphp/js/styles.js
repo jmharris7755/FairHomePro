@@ -59,3 +59,16 @@ EditSpecialtiesBtn.addEventListener('click', function () {
     editASpecialtyModal.toggle();
 })
 }
+
+//Modal for edit a home pop-up window start
+if (document.getElementById('editAHomeBtn'))
+{
+var editAHomeBtn = document.getElementById('editAHomeBtn');
+var editAHomeModal = new bootstrap.Modal(document.getElementById('editAHomeModal'), {
+    keyboard: false
+})
+editAHomeBtn.addEventListener('click', function () {
+    editAHomeModal.toggle();
+})
+}
+//Edit A Home Modal end

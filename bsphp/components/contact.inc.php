@@ -25,7 +25,7 @@
                 rows="3"
               ></textarea>
             </div>
-            <button type="button" class="btn btn-outline-secondary">
+            <button type="button" class="btn btn-outline-warning">
               Send
             </button>
           </div>

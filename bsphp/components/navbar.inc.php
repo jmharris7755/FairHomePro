@@ -21,25 +21,32 @@
           class="collapse navbar-collapse justify-content-end"
           id="navbarNav"
         >
+        <?php if(isset($_SESSION['loggedIn']) AND isset($_SESSION['sp_email'])): ?>
           <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active"  href="index.php">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="about.php">Contact</a>
+            </li>
+            <li clas = "nav-item"> 
+              <a clas = "nav-link" >
+            <?php else: ?>
+              <ul class="navbar-nav">
             <li class="nav-item">
               <a class="nav-link active"  href="index.php">Home</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="services.php">Services</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="contracts.php">Contracts</a>
-            </li>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="about.php">About</a>
+              <a class="nav-link" href="about.php">Contact</a>
             </li>
             <li clas = "nav-item"> 
               <a clas = "nav-link" >
-            <?php if(isset($_SESSION['loggedIn']) AND isset($_SESSION['email'])): ?>
-                Welcome <?php echo $_SESSION['email']; ?>
             <?php endif; ?>
+
             <?php if(isset($_SESSION['loggedIn'])): ?>
              <button onclick="window.location.href='logout.php'"
                 type="button" 

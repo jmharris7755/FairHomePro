@@ -14,6 +14,9 @@
               with the businesses in your area!
               Satisfaction gauranteed!
             </p>
+            <p>
+              Sign up with a Customer Account Here!
+            </p>
 
 
             <button onclick="window.location.href='signup.php'"
@@ -33,7 +36,8 @@
 
 
             <p> 
-            Are you a business owner? Sign up here!
+            Are you a Service Professional? To offer your services, 
+            Sign up here!
             </p>
 
             <button onclick="window.location.href='business_signup.php'"
@@ -41,6 +45,11 @@
                 class="btn btn-outline-success btn-lg">
               Sign-Up
             </button>
+            </p>
+
+            <?php
+            echo nl2br("\n");
+             ?>
 
             <p>
                 Already a member? Just sign-in!
@@ -54,8 +63,9 @@
 
           </div>
           <div class="col-md-5">
+            </p>
             <img
-              src="img/email_campaign_monochromatic.svg"
+              src="img/house-svgrepo-com.svg"
               alt="Header image"
             />
           </div>
@@ -64,8 +74,9 @@
 
           <?php if(isset($_SESSION['loggedIn']) AND isset($_SESSION['ho_email'])): ?>
           <? //Display if user is logged in ?>
-
-          <h2>Welcome <?php echo $_SESSION['ho_email']; ?> </h2>
+          
+          <h2>Welcome </h2>
+          <h2><?php echo $_SESSION['ho_username']; ?> </h2>
 
           <p>
             To get started, click on the "Services" button to tell
@@ -78,9 +89,12 @@
             Services
           </button>
 
+          <?php
+            echo nl2br("\n");
+             ?>
+
           <p>
-              Link to check existing orders / account
-              Not yet working
+              Check out your Account Information Here!
           </p>
 
           <button onclick="window.location.href='customer_account.php'
@@ -93,39 +107,45 @@
             Account
           </button>
 
+         
+            </p>
+            <img
+              src="img/house-svgrepo-com.svg"
+              alt="Header image"
+            />
+        
+
         <?php elseif(isset($_SESSION['sp_email']) AND isset($_SESSION['sp_username'])): ?>
-        <h2>Welcome <?php echo $_SESSION['sp_username']; ?> </h2>
-          <button onclick="window.location.href='contracts.php'"
-              type="button" 
-              class="btn btn-outline-info btn-lg">
-            Contracts
-          </button>
-                    <button onclick="window.location.href='service_pro_settings.php'
-                          <?php $_SESSION['sp_info_edit'] = FALSE; ?>
+        <h2>Welcome </h2>
+        <h2><?php echo $_SESSION['sp_username']; ?></h2>
+
+        <p>
+          Make Sure to check on your account frequently to update your Service Information,
+          and to view your contrat history! Click the button below to view your account.
+        </p>
+
+            <button onclick="window.location.href='service_pro_settings.php'
+                <?php $_SESSION['sp_info_edit'] = FALSE; ?>
                           <?php $_SESSION['sp_service_edit'] = FALSE; ?>"
               type="button" 
               class="btn btn-outline-warning btn-lg"
               name=sp_account
               >
-            Account
-          </button>
+             Account
+            </button>
+            </p>
+            <img
+              src="img/house-svgrepo-com.svg"
+              alt="Header image"
+            />
 
-       <?php endif; ?>         
-        </div>
-          <div class="col-md-5">
-          
-          <img
-            src="img/email_campaign_monochromatic.svg"
-            alt="Header image"
-          />
-          </div>
-          </div>
+                <?php endif; ?>         
           </div>
         </div>
       </div>
 
 
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 250">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -500 1440 250">
         <path
           fill="#fff"
           fill-opacity="1"

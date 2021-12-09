@@ -345,6 +345,46 @@
       </div>
     <!----------------Edit a Service Modal End --------------------------------->
 
+        <!----------------Edit A Home Modal Start --------------------------------->
+        <div class="modal" tabindex="-1" id="editAHomeModal">
+          <div class="modal-dialog">
+          <form method="post" action="#" class="modal-content">
+              <div class="modal-header">
+              <h5 class="modal-title">Edit Home</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+              </div>
+              <div class="modal-body">
+                <div class="mb-3">
+                    <label for="home_select" class="form-label">Select A Home</label><br>
+                    <select id="editHomeSelect" name ="street"required>
+                        <option value="">-- </option>
+                    <?php 
+                     $db_modal = mysqli_connect('localhost', 'root', '', 'fairhomepro');
+                     $ho_email = $_SESSION['ho_email'];
+                     $homes_query = "SELECT homes.home_ID, street FROM homeowners, owns, homes WHERE homeowners.HO_email='$ho_email'
+                     AND homeowners.HO_email = owns.HO_email AND homes.home_ID = owns.home_ID";
+
+                     $pick_home_query = mysqli_query($db_modal, $homes_query);
+                     
+                     while($temp = mysqli_fetch_assoc($pick_home_query))
+                     {    
+                        
+                          echo "<option value= \"" . $temp['street'] . "\">" . $temp['street'] . "</option>";
+                     }
+                     ?>
+                    </select required> 
+                </div>                       
+              <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              <button name="select_homeBtn" type="submit" class="btn btn-primary">Submit</button>
+              </div>
+          </form>
+          </div>
+      </div>
+    <!----------------Edit A Home Modal End --------------------------------->
+
 
       <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script> 
     <script src="js/bootstrap.min.js"></script>

@@ -7,58 +7,38 @@
         ></path>
       </svg>
       <div class="container">
-        <div class="row align-items-center justify-content-center">
+        <div class="col-md-10">
           <div class="col-md-5">
-            <button type="button" class="btn btn-outline-warning mb-3">
-              Home Info.
-            </button>
-
-            <h1>This page is under construction</h1>
+          <div class="d-flex flex-row"><img src="img/revenue_.svg" alt=""  /></div>
+            <h1>Welcome to the Services Page of FairHomePro.</h1>
 
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Delectus, tempore placeat corrupti enim, cumque ex? Mollitia nihil
-              sint cumque omnis iure nisi.
+              With FariHomePro, saving money on home services is so easy,
+              it's like you have your own money tree!
             </p>
-          </div>
-          <div class="col-md-5"><img src="img/coding_.svg" alt="" /></div>
-          <div class="col-md-5"><img src="img/marketing.svg" alt="" /></div>
-          <div class="col-md-5">
+
+            <p>
+              Ready to get the lowest price for the home service you need?
+              Great! Select the "Select Services" button below to get started!
+            </p>
+            <?php if(isset($_SESSION['ho_email'])):?>
             <button onclick= "window.location.href='service_management.php'"
             type="button "
             class="btn btn-outline-success mb-3">
               Select Services
             </button>
-
-            <h1>This page is under construction.</h1>
-
+            <?php else: ?>
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Delectus, tempore placeat corrupti enim, cumque ex? Mollitia nihil
-              sint cumque omnis iure nisi.
+              To get started, please sign in to or create a Customer Account
+              on the Home Page.
             </p>
-          </div>
-          <div class="col-md-5">
-            <button type="button" class="btn btn-outline-light mb-3">
-              Complaint?
+            <button onclick= "window.location.href='index.php'"
+            type="button "
+            class="btn btn-outline-success mb-3">
+              Home
             </button>
-
-            <h1>This page is under construction</h1>
-
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Delectus, tempore placeat corrupti enim, cumque ex? Mollitia nihil
-              sint cumque omnis iure nisi.
-            </p>
+            <?php endif; ?>
           </div>
-          <div class="col-md-5"><img src="img/revenue_.svg" alt="" /></div>
         </div>
       </div>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 210">
-        <path
-          fill="#fff"
-          fill-opacity="1"
-          d="M0,96L34.3,106.7C68.6,117,137,139,206,122.7C274.3,107,343,53,411,53.3C480,53,549,107,617,117.3C685.7,128,754,96,823,96C891.4,96,960,128,1029,154.7C1097.1,181,1166,203,1234,202.7C1302.9,203,1371,181,1406,170.7L1440,160L1440,320L1405.7,320C1371.4,320,1303,320,1234,320C1165.7,320,1097,320,1029,320C960,320,891,320,823,320C754.3,320,686,320,617,320C548.6,320,480,320,411,320C342.9,320,274,320,206,320C137.1,320,69,320,34,320L0,320Z"
-        ></path>
-      </svg>
     </section>
