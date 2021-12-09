@@ -11,13 +11,13 @@ CREATE TABLE IF NOT EXISTS homeowners(
 
 #Create service_types table
 CREATE TABLE IF NOT EXISTS service_types(
-	service_ID int AUTO_INCREMENT,
+	service_ID int,
     service VARCHAR(45) NOT NULL,
 	primary key (service_ID)
 );
 
-INSERT INTO service_types(service)
-VALUES ("Lawn Mowing"), ("Window Cleaning"), ("Hedge Trimming"), ("Garden upkeeping");
+INSERT IGNORE INTO service_types(service, service_ID)
+VALUES ("Lawn Mowing", "1"), ("Window Cleaning", "2"), ("Hedge Trimming", "3"), ("Garden upkeeping", "4");
 
 # Create the homes table
 CREATE TABLE IF NOT EXISTS homes(
@@ -46,10 +46,11 @@ CREATE TABLE IF NOT EXISTS homeowners(
 
 #Create service_types table
 CREATE TABLE IF NOT EXISTS service_types(
-	service_ID int AUTO_INCREMENT,
+	service_ID int,
     service VARCHAR(45) NOT NULL,
 	primary key (service_ID)
 );
+
 
 
 # Create the homes table
@@ -97,11 +98,15 @@ CREATE TABLE IF NOT EXISTS services(
     FOREIGN KEY (SP_email) REFERENCES service_pros (SP_email)
 );
 
+
 # Create specialties table
 CREATE TABLE IF NOT EXISTS specialties(
 SP_email VARCHAR(100),
-specialties VARCHAR(100),
-FOREIGN KEY (SP_email) REFERENCES service_pros (SP_email)
+service_ID INT,
+specialty_ID INT,
+foreign key(SP_email) REFERENCES service_pros (SP_email),
+foreign key (service_ID) REFERENCES service_types (service_ID),
+primary key(specialty_ID)
 );
 
 # Create licenses table

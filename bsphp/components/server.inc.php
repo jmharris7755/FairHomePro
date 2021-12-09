@@ -503,7 +503,46 @@ function create_contracts_table(){
     }
     }
     }
+
+
+
     
+//Get specialty information
+function sp_create_specialties_table(){
+    $sp_email = $_SESSION['sp_email'];
+    $db = mysqli_connect('localhost', 'root', '', 'fairhomepro');
+
+    $specialties_query = "SELECT service
+                        FROM service_types INNER JOIN specialties ON service_types.service_ID = specialties.service_ID
+                        WHERE specialties.SP_email = '$sp_email' ";
+    $specialties_query_results = mysqli_query($db, $specialties_query);
+
+    
+    if (mysqli_num_rows($specialties_query_results)){
+        $field = mysqli_fetch_fields($specialties_query_results);
+        $fields = array();
+        $j=0;
+        $service_num=1;
+    foreach($field as $col){
+      echo "<th>".$col->name."</th>";
+      array_push($fields, array(++$j, $col->name));
+    }
+    echo "</tr>";
+
+    while($sp_row = $specialties_query_results->fetch_array()){
+      echo "<tr>";
+      for($i=0 ; $i < sizeof($fields) ; $i++){
+        $fieldname = $fields[$i][1];
+        $fieldvalue = $sp_row[$fieldname];
+        
+        echo "<td><input type='text' value='" . $fieldvalue . "'readonly ></td>";
+      }
+      $service_num++;
+      echo "</tr>";
+    }
+    }
+    }
+
 
 //Get Service information
 function sp_create_services_table(){
@@ -682,6 +721,58 @@ if (isset($_POST['edit_service_modal'])){
                          SET s_price ='$price'
                          WHERE SP_email='$sp_email' AND s_type = '$service_type'";
         $query_results = mysqli_query($db, $update_query);
+}
+
+
+if(isset($_POST['remove_specialty_modal'])){
+    $sp_email = $_SESSION['sp_email'];
+    $service_ID = mysqli_real_escape_string($db, $_POST['specialty_type']);
+
+    $delete_specialty = "DELETE FROM specialties
+                         WHERE Service_ID = '$service_ID' AND SP_email = '$sp_email'";
+    mysqli_query($db, $delete_specialty);
+}
+
+
+
+
+
+if (isset($_POST['add_specialty_modal'])){
+    $service_ID = mysqli_real_escape_string($db, $_POST['specialty_type']);
+    $sp_email = $_SESSION['sp_email'];
+    $specialtyID_max_query = "SELECT MAX(specialty_ID) as m from specialties";
+    $specialtyID_max_result = mysqli_query($db, $specialtyID_max_query);
+    $specialtyID_max = mysqli_fetch_array($specialtyID_max_result);
+
+    if(!$specialtyID_max){
+        $specialty_ID = 1;
+    }
+    else{
+        $specialty_ID = $specialtyID_max[0] + 1;
+    }
+
+
+    $copy_check_query = "SELECT SP_email, service_ID
+                    FROM specialties
+                    WHERE SP_email = '$sp_email' AND service_ID = $service_ID";
+    $copy_check_result = mysqli_query($db, $copy_check_query);
+    $copy = mysqli_fetch_assoc($copy_check_result);
+
+    if($copy)
+    {
+        if($copy['SP_email'] === $sp_email AND $copy['service_ID'] === $service_ID)
+    {
+      array_push($errors, "We are already specialized in that.");
+     }
+    }
+
+    if(count($errors) == 0)
+    {
+    $specialty_insert = "INSERT INTO specialties (service_ID, specialty_ID, SP_email)
+                        VALUES('$service_ID', '$specialty_ID', '$sp_email')";
+    mysqli_query($db, $specialty_insert);
+    }
+
 }
     
 // Add Services to services table
