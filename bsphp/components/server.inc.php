@@ -222,7 +222,7 @@ if (isset($_POST['make_payment'])){
 
     mysqli_query($db, $transaction_query);
     
-    header('location: contracts.php');
+    header('location: customer_account.php');
 
     /*
       	$homes_query = "INSERT INTO homes (home_ID, street, city, state, zip, constr_type, floors, h_sq_ft, y_sq_ft) 
