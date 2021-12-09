@@ -110,24 +110,7 @@
             </div>
 
             <div class="d-flex mr-auto p-2 flex-column">
-                <h3> <strong><u>My Plants</u></strong> </h3>
-                <form action="customer_account.php" method="POST">
-                <div style="overflow:auto">
-                <table class="table-bordered">
-                    <?php
-                        account_create_plants_table();
-                     ?>
-                </table>
-                </div>
-                <div>
-                <button	onclick="window.location.href='edit_plants.php'"
-                        name="editPlantsLink"  
-                        type="button" 
-						class = "btn btn-outline-success"
-                        >
-						Edit Plants
-                </button>
-            </div>
+              
             <div class="col-md-3">
             </div>
             <div class="d-flex mr-auto p-2 flex-column">

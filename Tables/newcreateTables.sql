@@ -42,12 +42,12 @@ CREATE TABLE IF NOT EXISTS owns(
 # Create the plant_type table
 CREATE TABLE IF NOT EXISTS plant_types(
 
-    plant_ID INT PRIMARY KEY AUTO_INCREMENT,
+    plant_ID INT PRIMARY KEY,
 	plant_type varchar(100) NOT NULL
 );
 
-INSERT INTO plant_types(plant_type)
-VALUES ("Begonias"), ("Fuchsia"), ("Geraniums"), ("Abutilon"), ("Caladium"), ("Rose Bushes"), ("Boxwood and Myrtle");
+INSERT INTO plant_types(plant_type, plant_ID)
+VALUES ("Begonias", "1"), ("Fuchsia", "2"), ("Geraniums", "3"), ("Abutilon", "4"), ("Caladium", "5"), ("Rose Bushes", "6"), ("Boxwood and Myrtle", "7");
 
 # Create the has_plant table
 CREATE TABLE IF NOT EXISTS has_plant(
