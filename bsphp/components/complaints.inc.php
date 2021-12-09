@@ -11,6 +11,21 @@
                     <select name="contract_complaint" required>
                         <option value="">-- </option>
                     <?php 
+
+                     if (isset($_SESSION['sp_email']))
+                    {
+                    $sp_email = $_SESSION['sp_email'];
+                     $contract_query = "SELECT contract_ID 
+                     FROM contract
+                     WHERE SP_email = '$sp_email'";
+                     $test_query = mysqli_query($db, $contract_query);
+                     while($temp = mysqli_fetch_assoc($test_query))
+                     {    
+                          echo "<option value= \"" . $temp['contract_ID'] . "\">" . $temp['contract_ID'] . "</option>";
+                     }
+                     }
+                    if (isset($_SESSION['ho_email']))
+                    {
                     $ho_email = $_SESSION['ho_email'];
                      $contract_query = "SELECT contract_ID 
                      FROM contract
@@ -19,6 +34,7 @@
                      while($temp = mysqli_fetch_assoc($test_query))
                      {    
                           echo "<option value= \"" . $temp['contract_ID'] . "\">" . $temp['contract_ID'] . "</option>";
+                     }
                      }
                      ?>
                     </select required>
