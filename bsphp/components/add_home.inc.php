@@ -191,16 +191,16 @@
                           ?>
                           <br>
   	                    <select name="plant_type">
-                          <option value=NULL>-- </option>
-                          <option value="Begonias"> Begonias </option>
-                          <option value="Fuchsia"> Fuchsia </option>
-                          <option value="Geraniums"> Geraniums</option>
-                          <option value="Abutilon"> Abutilon </option>
-                          <option value="Caladium"> Caladium </option>
-                          <option value="Herbs"> Herbs </option>
-                          <option value="Herbs"> Rose Bushes </option>
-                          <option value="Boxwood and Myrtle"> Boxwood and Myrtle </option>
-                        </select>
+                          <option value="">-- </option>
+                            <?php $db_modal = mysqli_connect('localhost', 'root', '', 'fairhomepro');
+                                $plants_query = "SELECT plant_type FROM plant_types";
+                                $test_query = mysqli_query($db_modal, $plants_query);
+                                while($temp = mysqli_fetch_assoc($test_query))
+                                {    
+                                      echo "<option value= \"" . $temp['plant_type'] . "\">" . $temp['plant_type'] . "</option>";
+                                }
+                            ?>
+                        </select required>
                     </div>
                     </p>
                     <div class="input-group">

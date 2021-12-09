@@ -16,42 +16,22 @@
               Edit your home information in form to the right.
             </p>
             <?php
-                    //Connect to DB and query user info
-                    $db_modal = mysqli_connect('localhost', 'root', '', 'fairhomepro');
-                    $ho_email = $_SESSION['ho_email'];
- 
-                    //Get Cookie for option selected in Edit home drop down
-                    $edit_home_select_value = $_COOKIE['edit_home_select'];
-                    //echo $edit_home_select_value;
-                              
-                    if($edit_home_select_value){
-                    //Query to get the home information associated with street name in dropdown
-                    $home_info_query = "SELECT homes.home_ID, street, city, state, zip, constr_type, floors, h_sq_ft, y_sq_ft, plant_type
-                                        FROM owns, homes, plant_types
-                                        WHERE owns.HO_email = '$ho_email' AND owns.home_ID = homes.home_ID 
-                                        AND homes.home_ID = plant_types.home_ID AND homes.street = '$edit_home_select_value'";
-  
-                    $home_info_data = mysqli_query($db_modal, $home_info_query);
-                    while($c_row = mysqli_fetch_array($home_info_data)){
-                        $this_homeID = $c_row['home_ID'];
-                        $this_street = $c_row['street'];
-                        $this_city = $c_row['city'];
-                        $this_state = $c_row['state'];
-                        $this_zip = $c_row['zip'];
-                        $this_constr_type = $c_row['constr_type'];
-                        $this_floors = $c_row['floors'];
-                        $this_h_sq_ft = $c_row['h_sq_ft'];
-                        $this_y_sq_ft = $c_row['y_sq_ft'];
-                        $this_plant_type = $c_row['plant_type'];
-                    }
-         }
-         ?>
-
+                //Get information from edit home select query
+                $this_homeID = $_SESSION['select_home_ID'];
+                $this_street = $_SESSION['select_street'];
+                $this_city = $_SESSION['select_city'];
+                $this_state = $_SESSION['select_state'];
+                $this_zip = $_SESSION['select_zip'];
+                $this_constr_type = $_SESSION['select_constr_type'];
+                $this_floors = $_SESSION['select_floors'];
+                $this_h_sq_ft = $_SESSION['select_h_sqft'];
+                $this_y_sq_ft = $_SESSION['select_y_sqft'];
+            ?>
           </div>
           <div class = "container pt-3">
             <div class="row align-items-center justify-content-center">
                 <div class="col-auto">
-                <h2>Edit Home: <?php "echo $edit_home_select_value;" ?></h2>
+                <h2>Edit Selected Home:</h2>
                     <form  method="post" action="index.php">
             	    <?php include('errors.inc.php'); ?>
                     <div style="input-group" hidden>
@@ -232,25 +212,6 @@
                             name="y_sqft"
                             value="<?php echo $this_y_sq_ft;?>" 
                         >
-                    </div>
-                    <div style="input-group">
-  	                    <label>Plant Type:</label>
-                        <?php
-                          //These cursed lines are to line up the labels using whitespace
-                          echo str_repeat("&nbsp;", 28);
-                          ?>
-                          <br>
-  	                    <select name="plant_type">
-                          <option value="<?php echo $this_plant_type;?>"><?php echo $this_plant_type;?></option>
-                          <option value="Begonias"> Begonias </option>
-                          <option value="Fuchsia"> Fuchsia </option>
-                          <option value="Geraniums"> Geraniums</option>
-                          <option value="Abutilon"> Abutilon </option>
-                          <option value="Caladium"> Caladium </option>
-                          <option value="Herbs"> Herbs </option>
-                          <option value="Herbs"> Rose Bushes </option>
-                          <option value="Boxwood and Myrtle"> Boxwood and Myrtle </option>
-                        </select>
                     </div>
                     </p>
                     <div class="input-group">

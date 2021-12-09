@@ -83,8 +83,8 @@
               Not yet working
           </p>
 
-          <button onclick="window.location.href='customer_account.php'
-                          <?php $_SESSION['c_info_edit'] = FALSE; ?>
+          <button onclick="window.location.href='customer_account.php';
+                          <?php $_SESSION['c_info_edit'] = FALSE; ?>;
                           <?php $_SESSION['c_home_edit'] = FALSE; ?>"
               type="button" 
               class="btn btn-outline-warning btn-lg"

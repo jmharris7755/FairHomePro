@@ -124,15 +124,15 @@
                 <div class="mb-3">
                     <label for="plant_type" class="form-label">Plant Type</label><br>
                     <select name="plant_type">
-                    <option value=NULL>-- </option>
-                        <option value="Begonias"> Begonias </option>
-                        <option value="Fuchsia"> Fuchsia </option>
-                        <option value="Geraniums"> Geraniums</option>
-                        <option value="Abutilon"> Abutilon </option>
-                        <option value="Caladium"> Caladium </option>
-                        <option value="Herbs"> Herbs </option>
-                        <option value="Herbs"> Rose Bushes </option>
-                        <option value="Boxwood and Myrtle"> Boxwood and Myrtle </option>
+                    <option value="">-- </option>
+                            <?php $db_modal = mysqli_connect('localhost', 'root', '', 'fairhomepro');
+                                $plants_query = "SELECT plant_type FROM plant_types";
+                                $test_query = mysqli_query($db_modal, $plants_query);
+                                while($temp = mysqli_fetch_assoc($test_query))
+                                {    
+                                      echo "<option value= \"" . $temp['plant_type'] . "\">" . $temp['plant_type'] . "</option>";
+                                }
+                            ?>
                     </select required>
                 </div>
             </div>
@@ -158,7 +158,7 @@
               <div class="modal-body">
                 <div class="mb-3">
                     <label for="home_select" class="form-label">Select A Home</label><br>
-                    <select id="editHomeSelect" onchange = "SaveStreetCookie()" required>
+                    <select id="editHomeSelect" name ="street"required>
                         <option value="">-- </option>
                     <?php 
                      $db_modal = mysqli_connect('localhost', 'root', '', 'fairhomepro');
@@ -167,44 +167,18 @@
                      AND homeowners.HO_email = owns.HO_email AND homes.home_ID = owns.home_ID";
 
                      $pick_home_query = mysqli_query($db_modal, $homes_query);
+                     
                      while($temp = mysqli_fetch_assoc($pick_home_query))
                      {    
+                        
                           echo "<option value= \"" . $temp['street'] . "\">" . $temp['street'] . "</option>";
                      }
                      ?>
-                    </select required>                        
-                        <?php 
-                            //Get Cookie for option selected in Edit home drop down
-                            if(isset($_COOKIE['edit_home_select'])){
-                            $edit_home_select_value = $_COOKIE['edit_home_select'];
-                            //echo $edit_home_select_value;
-                            }
-                            
-                            if($edit_home_select_value){
-                            //Query to get the home information associated with street name in dropdown
-                            $home_info_query = "SELECT homes.home_ID, street, city, state, zip, constr_type, floors, h_sq_ft, y_sq_ft, plant_type
-                                                FROM owns, homes, plant_types
-                                                WHERE owns.HO_email = '$ho_email' AND owns.home_ID = homes.home_ID 
-                                                AND homes.home_ID = plant_types.home_ID 
-                                                AND homes.street = '$edit_home_select_value'";
-
-                            $home_info_data = mysqli_query($db_modal, $home_info_query);
-                            while($c_row = mysqli_fetch_array($home_info_data)){
-                                $this_street = $c_row['street'];
-                                $this_city = $c_row['city'];
-                                $this_state = $c_row['state'];
-                                $this_zip = $c_row['zip'];
-                                $this_constr_type = $c_row['constr_type'];
-                                $this_floors = $c_row['floors'];
-                                $this_h_sq_ft = $c_row['h_sq_ft'];
-                                $this_y_sq_ft = $c_row['y_sq_ft'];
-                                $this_plant_type = $c_row['plant_type'];
-                              }
-                            }
-                         ?>
+                    </select required> 
+                </div>                       
               <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-              <button onclick="window.location.href='edit_home.php'" name="select_homeBtn" type="button" class="btn btn-primary">Submit</button>
+              <button name="select_homeBtn" type="submit" class="btn btn-primary">Submit</button>
               </div>
           </form>
           </div>
@@ -315,7 +289,6 @@
           </div>
       </div>
     <!----------------Edit a Service Modal End --------------------------------->
-
 
       <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script> 
     <script src="js/bootstrap.min.js"></script>

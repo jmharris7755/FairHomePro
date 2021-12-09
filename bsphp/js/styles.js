@@ -13,6 +13,20 @@ addAHomeBtn.addEventListener('click', function () {
 }
 //Add A Home Modal end
 
+//Modal for add a Plant pop-up window start
+if (document.getElementById('addAPlantBtn'))
+{
+var addAPlantBtn = document.getElementById('addAPlantBtn');
+var addAPlantModal = new bootstrap.Modal(document.getElementById('addAPlantModal'), {
+    keyboard: false
+})
+addAPlantBtn.addEventListener('click', function () {
+    addAPlantModal.toggle();
+})
+
+}
+//Add A Plant Modal end
+
 //Modal for edit a home pop-up window start
 if (document.getElementById('editAHomeBtn'))
 {
@@ -53,30 +67,5 @@ EditServicesBtn.addEventListener('click', function () {
 /************************************************* JS MODALS END ************************************************************************** */
 
 /************************************************* JS FUNCTIONS START ************************************************************************** */
-//Function to who hide edit home form
-function SaveStreetCookie() {
-    var edit_home_select = document.getElementById("editHomeSelect");
-    //var edit_home_form = document.getElementById("editHomeForm");
-    var name = "edit_home_select"
-    var edit_home_select_value = "";
 
-    //edit_home_form.style.display = edit_home_select.value == "" ? "none" : "block";
-    edit_home_select_value = edit_home_select.value;
-    
-    document.cookie =  'edit_home_select='+edit_home_select_value+'; max-age=1800';
-
-
-
-    alert(document.cookie);
-
-}
-
-//create cookie generic function --
-//Used in custoemr_account to create the edit_home_select cookie
-function setCookie(cname, cvalue, exdays) {
-    var d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    var expires = "expires="+d.toUTCString();
-    document.cookie = cname + "=" + cvalue + "; " + expires;
-}
 /************************************************* JS FUNCTIONS END ************************************************************************** */
