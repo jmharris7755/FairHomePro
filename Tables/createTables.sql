@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS service_types(
 	primary key (service_ID)
 );
 
-INSERT IGNORE INTO service_types(service, service_ID)
+INSERT INTO service_types(service, service_ID)
 VALUES ("Lawn Mowing", "1"), ("Window Cleaning", "2"), ("Hedge Trimming", "3"), ("Garden upkeeping", "4");
 
 # Create the homes table
