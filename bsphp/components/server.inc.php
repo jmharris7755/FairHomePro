@@ -254,7 +254,7 @@ if (isset($_POST['reg_home'])) {
   $floor_type = mysqli_real_escape_string($db, $_POST['floor_type']);
   $h_sqft = mysqli_real_escape_string($db, $_POST['h_sqft']);
   $y_sqft = mysqli_real_escape_string($db, $_POST['y_sqft']);
-  $plant_type = mysqli_real_escape_string($db, ($_POST['plant_type']));
+  $plant_type = mysqli_real_escape_string($db, $_POST['plant_type']);
 
   // form validation: ensure that the form is correctly filled ...
   // by adding (array_push()) corresponding error unto $errors array
@@ -308,15 +308,11 @@ if (isset($_POST['reg_home'])) {
     }
 
     //Query to get plant_ID to insert into the has_plant table
-    $plant_type_query = "SELECT plant_ID FROM plant_types WHERE plant_type = '$plant_type'";
-    $plant_type_result = mysqli_query($db, $plant_type_query);
-    $plant_type_arr = mysqli_fetch_assoc($plant_type_result);
+    $plant_ID_query = "SELECT plant_ID FROM plant_types WHERE plant_type = '$plant_type'";
+    $plant_ID_result = mysqli_query($db, $plant_ID_query);
+    $plant_ID_arr = mysqli_fetch_array($plant_ID_result);
 
-    $plant_ID = $plant_type_arr['plant_ID'];
-
-    /*
-    $service_ID = mysqli_real_escape_string($db, $_POST['specialty_type']);
-    */
+    $plant_ID = $plant_ID_arr[0];
 
     //Query to inset home info into homes table for the homeowner
   	$homes_query = "INSERT INTO homes (home_ID, street, city, state, zip, constr_type, floors, h_sq_ft, y_sq_ft) 
@@ -856,11 +852,11 @@ if (isset($_POST['add_home_modal'])) {
     }
 
     //Query to get plant_ID to insert into the has_plant table
-    $plant_ID_query = "SELECT plant_type FROM plant_types WHERE plant_type = '$plant_type'";
+    $plant_ID_query = "SELECT plant_ID FROM plant_types WHERE plant_type = '$plant_type'";
     $plant_ID_result = mysqli_query($db, $plant_ID_query);
     $plant_ID_arr = mysqli_fetch_array($plant_ID_result);
 
-    $plant_type = $plant_ID_arr[0];
+    $plant_ID = $plant_ID_arr[0];
 
     //Query to inset home info into homes table for the homeowner
   	$homes_query = "INSERT INTO homes (home_ID, street, city, state, zip, constr_type, floors, h_sq_ft, y_sq_ft) 
